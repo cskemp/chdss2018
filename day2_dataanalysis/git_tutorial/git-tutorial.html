@@ -32,7 +32,6 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
-
 ---
 
 class: split-two bg-main1
@@ -61,6 +60,181 @@ class: split-two bg-main1
 ]]
 
 
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Installing git]
+]]
+
+
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Getting started]
+]]
+
+
+---
+
+class: bg-main1
+
+.pad1[
+.font3[Creating an empty repository]
+]
+
+&lt;br&gt;
+
+.pull.left[.pad1[
+
+From the Windows command prompt:
+
+```{}
+&gt; git init
+Initialized empty Git repository in C:/Users/Dan/GitHub/myproject/.git/
+```
+
+From Mac OS terminal or Linux shell:
+
+```{}
+&gt; git init
+Initialized empty Git repository in /home/danielle/myproject/.git/
+```
+
+]]
+
+
+---
+
+class: bg-main1
+
+.pad1[
+.font3[Adding to the repository]
+]
+
+&lt;br&gt;
+
+.pull.left[.pad1[
+
+- Do some things...
+- Create a file...
+- Let's see what the `git status` is:
+
+```{}
+&gt; git status
+
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add &lt;file&gt;..." to include in what will be committed)
+
+        README.md
+```
+
+]]
+
+
+---
+
+class: bg-main1
+
+.pad1[
+.font3[Adding to the repository]
+]
+
+&lt;br&gt;
+
+.pull.left[.pad1[
+
+- Well, it's suggesting that we try to `git add` something!
+- Let's be lazy: `git add --all`
+
+```{}
+&gt; git add --all
+&gt; git status
+
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached &lt;file&gt;..." to unstage)
+
+        new file:   README.md
+```
+
+]]
+
+
+---
+
+class: bg-main1
+
+.pad1[
+.font3[Adding to the repository]
+]
+
+&lt;br&gt;
+
+.pull.left[.pad1[
+
+- Okay that sounds sensible. So lets `git commit`
+
+```{}
+&gt; git commit -m "my first commit"
+[master (root-commit) adfa917] my first commit
+ 1 file changed, 3 insertions(+)
+ create mode 100644 README.md
+```
+
+]]
+
+
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Making a commit]
+]]
+
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Creating a repository on GitHub]
+]]
+
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Pushing your commits to GitHub]
+]]
+
+
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Cloning a repository from GitHub]
+]]
+
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Working collaboratively]
+]]
 
 
 

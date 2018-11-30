@@ -1,0 +1,70 @@
+---
+title: "Version control with git"
+author: "Danielle Navarro"
+date: "30 November 2018"
+output:
+  html_document:
+    includes:
+      in_header: header.html
+    theme: flatly
+    highlight: textmate
+    css: mystyle.css
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Getting started 
+
+From the Windows command prompt:
+
+```{}
+> git init
+Initialized empty Git repository in C:/Users/Dan/GitHub/myproject/.git/
+```
+
+From Mac OS terminal or Linux shell:
+
+```{}
+> git init
+Initialized empty Git repository in /home/danielle/myproject/.git/
+```
+
+
+```{}
+> git status
+
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        README.md
+```
+
+
+```{}
+> git add --all
+> git status
+
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+        new file:   README.md
+```
+
+
+```{}
+> git commit -m "my first commit"
+[master (root-commit) adfa917] my first commit
+ 1 file changed, 3 insertions(+)
+ create mode 100644 README.md
+```
