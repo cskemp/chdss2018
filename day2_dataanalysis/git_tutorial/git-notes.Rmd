@@ -1,5 +1,5 @@
 ---
-title: "Version control with git"
+title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Version control with git</h1></div>'
 author: "Danielle Navarro"
 date: "30 November 2018"
 output:
@@ -15,6 +15,82 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+
+## Installing git
+
+- For Windows users, go to https://gitforwindows.org/. When installing, make sure you select the "Use Git from the Windows Command Prompt" option. 
+- For Mac users, you can install the "Xcode command line tools" from the App Store (you don't need all of Xcode), which comes with git
+
+## Check that it's installed 
+
+On my Windows machine this is what I get:
+
+```{}
+> git --version
+
+git version 2.19.1.windows.1
+```
+
+On my Mac I have a slightly older version:
+
+```{}
+> git --version 
+
+git version 2.15.2 (Apple Git 101.1)
+```
+
+
+## Getting a GitHub account
+
+- Sign up for a GitHub account [here](https://github.com/). Pick a sensible username, because there's a good chance it will follow you around for a long time. You can change your username, but bad things can happen.
+- When you sign up it will need to be associated with an email address. 
+- GitHub allows unlimited private repositories for education purposes (a university email address is helpful for making this clear). You can apply for it by following the instructions [here](https://help.github.com/articles/applying-for-an-academic-research-discount/). It can take a few days, though mine was approved in minutes. You have to reapply every two years; but if that worries you it's basically the equivalent of their $7/month developer plan. 
+
+## Back to git...
+
+```{}
+git config --global user.name 'Danielle Navarro'
+git config --global user.email 'd.navarro@unsw.edu.au'
+git config --global --list
+```
+
+Make sure this email address is the same one you used to sign up to GitHub. Jenny Bryan has some [very good advice](http://happygitwithr.com/hello-git.html#more-about-git-config) about some important config settings you can play with
+
+## Client or command line???
+
+We'll use command line because (for the simple cases we're interested in) it's - in my opinion - actually less intimidating than fancy editors with lots of bells and whistles. That said, after a while it does become a pain, and so like Jenny Bryan says, you can just find yourself a nice git client that will spare you the tediousness of [command line bullshittery](http://www.pgbovine.net/command-line-bullshittery.htm). I'd suggest [GitKraken](https://www.gitkraken.com/) for that.
+
+
+
+
+## Our first workflow
+
+The simplest way to use GitHub is to archive and backup everything
+
+- Create the repository on GitHub (the *origin*)
+- *Clone* a local copy to your computer
+- Make changes
+- Check the *status*
+- Make a local *commit* 
+- *Push* the commits back up to GitHub
+
+Any time you accidentally set fire to your computer, you can just clone the repository from GitHub to another machine and keep working.
+
+
+## Our second workflow
+
+- Adding another contributor on GitHub
+- Using `pull` and `push` to keep work in sync
+- Using the GitHub issue tracker to work together
+
+
+## Beyond this
+
+Once you're comfortable, there's more cool things you can do. Suppose you want to try out a really cool idea, but maybe it won't  work; you can create a new *branch* of the repository, which lets you make whatever changes you want. If it doesn't work, you can switch back to the master branck. If it does, you can merge the new changes back in. You can zoom forward and backward in time, inspecting the repository at different stages of development. You can create your own *fork* of someone else's repository, and if you want them to make some changes you can make a *pull request* which asks them to incorporate your code into their work. These workflows are all very cool, and a lot of them can all be done without having to leave RStudio, but we won't cover those here. 
+
+Instead I'll suggest that when you're ready, have a read through [Happy Git and GitHub for the useR](http://happygitwithr.com/) as a great resource to introduce you to these things.
+
 
 ## Getting started 
 
@@ -68,3 +144,13 @@ Changes to be committed:
  1 file changed, 3 insertions(+)
  create mode 100644 README.md
 ```
+
+
+
+
+## Further resources
+
+- [Happy Git with R](http://happygitwithr.com/) by Jenny Bryan and Jim Hester
+-
+
+
