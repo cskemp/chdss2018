@@ -78,7 +78,78 @@ That being said for our purposes we're going to use the command line. That's not
 
 ## Our first workflow: Backing up your work to GitHub
 
-The simplest way to use GitHub is to archive and backup everything
+Git and GitHub can be used in lots of ways, but let's start simple! Let's suppose you're about to start a new project that you're going to call `summerschool`. What you'd like to do is keep all your work associated with this project in a folder called `summerschool`, and you want it to be backed up in the cloud (and ideally, to automatically keep track of the history, so you can go back to earlier versions if you want). That's something you could do with a combination of Dropbox and Time Machine, but let's do it with git and GitHub!
+
+### Creating the repository on GitHub
+
+The way that git "thinks" of things is to imagine that the version of your work on the *remote machine* (GitHub) is the *origin* of the project, and the version on your *local machine* is your copy of that project, so let's mirror that logic. Go to to your GitHub homepage (for me that's https://github.com/djnavarro), and select *"new repository"* as shown below:
+
+![](./images/new_repository1.jpg)
+
+That will take you to a screen that asks you for some information about the repository.
+
+
+![](./images/new_repository2.jpg)
+
+
+Come up with a name for your repository, like oh I don't know *summerschool*, check the "initialise with a README" option, write a description, and select R from the *.gitignore* menu.
+
+
+![](./images/new_repository3.jpg)
+
+When you click on the *create repository* option, GitHub now creates a homepage for your ne repository (e.g., https://github.com/djnavarro/summerschool) and immediately redirects you to it. So you might be looking at something like this:
+
+
+![](./images/new_repository4.jpg)
+
+What you'll immediately notice is that there are two files:
+
+- `README.md` is a plain text file (using markdown formatting) that provides a description of your project, and GitHub automatically displays that file for you
+- `.gitignore` is also a plain text file that lists various types of file that your git repository is going to "ignore". We'll talk a bit about that later.
+
+Your repository now exists on GitHub! Nice work!
+
+
+### Cloning the repository to your local machine
+
+Next step is to have a copy of it on your local machine! We're going to do that at the command line. So, open the Windows Command Prompt or Mac Terminal. I keep all my git repositories in a single folder, so my first action is to use the `cd` command to "change directory" to the location where you want to copy your project. Windows version:
+
+```{}
+> cd C:\Users\Dan\GitHub
+```
+
+Mac version:
+
+```{}
+> cd /Users/Dan/GitHub
+```
+
+Now what we want to do is use a `git clone` command, which will make a copy (clone) of the repository on your local machine, like this:
+
+
+```{}
+> git clone https://github.com/djnavarro/summerschool.git
+```
+
+You'll see some output that looks like this:
+
+```{}
+Cloning into 'summerschool'...
+remote: Enumerating objects: 4, done.
+remote: Counting objects: 100% (4/4), done.
+remote: Compressing objects: 100% (4/4), done.
+remote: Total 4 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (4/4), done.
+```
+
+If you then open up Explorer (on Windows) or Finder (on Mac) and take a look, you'll see that there is a new folder called `summerschool` on your computer that contains the files. On Windows, you're probably looking at something like this:
+
+![](./images/clonedrepo.jpg)
+
+On a Mac it should look similar *BUT* there's a good chance that you can't see the `.git` folder or the `.gitignore` file. They do exist, but by default on a Mac any file that starts with a dot is considered a "hidden file" so Finder won't display it unless you change your settings. But that's okay, we're not going to bother with those for now.
+
+**Important**: Never manually edit the `.git` folder. That's where git does all it's magic and if you tinker with anything it will cry. (Relatedly, as a warning, it's best not to have your git repository inside a Dropbox folder - Dropbox and git don't play well together. Besides, we're using GitHub to backup and sync so we don't actually need Dropbox)
+
 
 - Create the repository on GitHub (the *origin*)
 - *Clone* a local copy to your computer
