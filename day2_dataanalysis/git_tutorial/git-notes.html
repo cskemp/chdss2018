@@ -158,43 +158,46 @@ Version control with git
 
 <div id="installing-git" class="section level2">
 <h2>Installing git</h2>
+<p>The first thing we need to do is make sure you have a working version of git on your computer, which we’ll be referring to as the <em>local</em> machine thoughout this tutorial. Installing git on your local machine is (hopefully) not too difficult. There are several different ways you can do it, but the simplest ones are listed below:</p>
 <ul>
 <li>For Windows users, go to <a href="https://gitforwindows.org/" class="uri">https://gitforwindows.org/</a>. When installing, make sure you select the “Use Git from the Windows Command Prompt” option.</li>
 <li>For Mac users, you can install the “Xcode command line tools” from the App Store (you don’t need all of Xcode), which comes with git</li>
 </ul>
-</div>
-<div id="check-that-its-installed" class="section level2">
-<h2>Check that it’s installed</h2>
-<p>On my Windows machine this is what I get:</p>
+<p>Once you’ve completed the installation, it’s a good idea to check that everything worked. For Windows users, open the Windows Command Prompt and type <code>git --version</code>. When I do this on my machine this is what I get:</p>
 <pre><code>&gt; git --version
 
 git version 2.19.1.windows.1</code></pre>
-<p>On my Mac I have a slightly older version:</p>
+<p>For Mac users it’s exactly the same except you open the Terminal. When I do this on my Mac it turns out I have a slightly dated version of git, and should probably update at some point:</p>
 <pre><code>&gt; git --version 
 
 git version 2.15.2 (Apple Git 101.1)</code></pre>
+<p>As long as you’re getting a message that tells you that git exists then you’re good to go.</p>
+</div>
+<div id="introducing-yourself-to-git" class="section level2">
+<h2>Introducing yourself to git</h2>
+<p>In a moment we’ll get you to sign up for an account with GitHub, but while we’re here at the command line, we might as well make a few settings. You can tell git who you are by using the <code>git config</code> command. For me, that means I do this:</p>
+<pre><code>git config --global user.name 'Danielle Navarro'
+git config --global user.email 'd.navarro@unsw.edu.au'</code></pre>
+<p>Jenny Bryan has some <a href="http://happygitwithr.com/hello-git.html#more-about-git-config">very good advice</a> about some important config settings you can play with. You can see more about what the various options are with this command:</p>
+<pre><code>git config --global --list</code></pre>
 </div>
 <div id="getting-a-github-account" class="section level2">
 <h2>Getting a GitHub account</h2>
+<p>The next step in the process is setting up an account with a service that hosts <em>remote</em> git repositories for you in the cloud. There are many different services, but we’ll use GitHub for this. Go to the GitHub website at <a href="https://github.com/" class="uri">https://github.com/</a> and follow the sign up instructions. Some notes:</p>
 <ul>
-<li>Sign up for a GitHub account <a href="https://github.com/">here</a>. Pick a sensible username, because there’s a good chance it will follow you around for a long time. You can change your username, but bad things can happen.</li>
-<li>When you sign up it will need to be associated with an email address.</li>
-<li>GitHub allows unlimited private repositories for education purposes (a university email address is helpful for making this clear). You can apply for it by following the instructions <a href="https://help.github.com/articles/applying-for-an-academic-research-discount/">here</a>. It can take a few days, though mine was approved in minutes. You have to reapply every two years; but if that worries you it’s basically the equivalent of their $7/month developer plan.</li>
+<li>Pick a sensible username, because there’s a good chance it will follow you around for a long time. You can change your username, but bad things can happen.</li>
+<li>When you sign up for an account it <em>will</em> need to be associated with an email address. You should pick the address that makes sense for you (probably your university account)</li>
+<li>A nice feature if you have a university email address and are using GitHub for edication: youcan apply for a “developer” account (which are normally $7/month) for free You can apply for it by following the instructions <a href="https://help.github.com/articles/applying-for-an-academic-research-discount/">here</a>. It can take a few days, though mine was approved in minutes.</li>
+<li><strong>Important</strong>: the email address that you use for GitHub needs to be the same one that you listed in the <code>git config</code> command earlier.</li>
 </ul>
 </div>
-<div id="back-to-git" class="section level2">
-<h2>Back to git…</h2>
-<pre><code>git config --global user.name 'Danielle Navarro'
-git config --global user.email 'd.navarro@unsw.edu.au'
-git config --global --list</code></pre>
-<p>Make sure this email address is the same one you used to sign up to GitHub. Jenny Bryan has some <a href="http://happygitwithr.com/hello-git.html#more-about-git-config">very good advice</a> about some important config settings you can play with</p>
-</div>
 <div id="client-or-command-line" class="section level2">
-<h2>Client or command line???</h2>
-<p>We’ll use command line because (for the simple cases we’re interested in) it’s - in my opinion - actually less intimidating than fancy editors with lots of bells and whistles. That said, after a while it does become a pain, and so like Jenny Bryan says, you can just find yourself a nice git client that will spare you the tediousness of <a href="http://www.pgbovine.net/command-line-bullshittery.htm">command line bullshittery</a>. I’d suggest <a href="https://www.gitkraken.com/">GitKraken</a> for that.</p>
+<h2>Client or command line?</h2>
+<p>There are several differnt ways you can use git, but maybe the biggest distinction is between using the <em>command line</em> tools (typing commands in at the Windows Command Prompt or the Mac Terminal) and using a <em>git client</em> (software that has a nice graphical user interface). In the long run it’s probably worthwhile exploring a few different git clients: as Jenny Bryan says, it will spare you the tediousness of <a href="http://www.pgbovine.net/command-line-bullshittery.htm">“command line bullshittery”</a>. <a href="https://www.gitkraken.com/">GitKraken</a> is a fairly popular option, but RStudio now has a nice git client built in, so you might want to explore that.</p>
+<p>That being said for our purposes we’re going to use the command line. That’s not because we want to be “hardcore” but because most git clients are built for people who already understand git, and so the user interface is designed to show you “everything at a glance”, and (for me at least) the visual complexity of it is overhwleming. Because this is just a “getting started” tutorial we’ll just stick to some simple commands.</p>
 </div>
-<div id="our-first-workflow" class="section level2">
-<h2>Our first workflow</h2>
+<div id="our-first-workflow-backing-up-your-work-to-github" class="section level2">
+<h2>Our first workflow: Backing up your work to GitHub</h2>
 <p>The simplest way to use GitHub is to archive and backup everything</p>
 <ul>
 <li>Create the repository on GitHub (the <em>origin</em>)</li>
