@@ -250,13 +250,27 @@ Unpacking objects: 100% (4/4), done.</code></pre>
 </div>
 <p>On a Mac it should look similar <em>BUT</em> there’s a good chance that you can’t see the <code>.git</code> folder or the <code>.gitignore</code> file. They do exist, but by default on a Mac any file that starts with a dot is considered a “hidden file” so Finder won’t display it unless you change your settings. But that’s okay, we’re not going to bother with those for now.</p>
 <p><strong>Important</strong>: Never manually edit the <code>.git</code> folder. That’s where git does all it’s magic and if you tinker with anything it will cry. (Relatedly, as a warning, it’s best not to have your git repository inside a Dropbox folder - Dropbox and git don’t play well together. Besides, we’re using GitHub to backup and sync so we don’t actually need Dropbox)</p>
+</div>
+<div id="learning-about-our-new-git-repository" class="section level3">
+<h3>Learning about our new git repository</h3>
+<p>Right, so now we have a local copy. Before making any changes, let’s explore it a little. First off, let’s find out what our <code>git status</code> is. So let’s go back to the command line and type this:</p>
+<pre><code>&gt;git status</code></pre>
+<p>What you see is this:</p>
+<pre><code>On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean</code></pre>
+<p>What this is telling you is:</p>
 <ul>
+<li>The name for the current “branch” (right now our project only has one branch) is <em>master</em></li>
+<li>Your copy of this branch is up to date (i.e., it’s the same as the <em>origin</em> on GitHub)</li>
+<li><p>You haven’t made any local changes, so you have nothing to <em>commit</em>.</p></li>
 <li>Create the repository on GitHub (the <em>origin</em>)</li>
 <li><em>Clone</em> a local copy to your computer</li>
 <li>Make changes</li>
 <li>Check the <em>status</em></li>
 <li>Make a local <em>commit</em></li>
-<li><em>Push</em> the commits back up to GitHub</li>
+<li><p><em>Push</em> the commits back up to GitHub</p></li>
 </ul>
 <p>Any time you accidentally set fire to your computer, you can just clone the repository from GitHub to another machine and keep working.</p>
 </div>

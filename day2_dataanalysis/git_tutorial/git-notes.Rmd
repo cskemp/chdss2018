@@ -150,6 +150,32 @@ On a Mac it should look similar *BUT* there's a good chance that you can't see t
 
 **Important**: Never manually edit the `.git` folder. That's where git does all it's magic and if you tinker with anything it will cry. (Relatedly, as a warning, it's best not to have your git repository inside a Dropbox folder - Dropbox and git don't play well together. Besides, we're using GitHub to backup and sync so we don't actually need Dropbox)
 
+### Learning about our new git repository
+
+Right, so now we have a local copy. Before making any changes, let's explore it a little. First off, let's find out what our `git status` is. So let's go back to the command line and type this:
+
+```{}
+>git status
+```
+
+What you see is this:
+
+```{}
+On branch master
+Your branch is up to date with 'origin/master'.
+
+nothing to commit, working tree clean
+```
+
+What this is telling you is:
+
+- The name for the current "branch" (right now our project only has one branch) is *master*
+- Your copy of this branch is up to date (i.e., it's the same as the *origin* on GitHub)
+- You haven't made any local changes, so you have nothing to *commit*.
+
+
+
+
 
 - Create the repository on GitHub (the *origin*)
 - *Clone* a local copy to your computer
