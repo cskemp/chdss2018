@@ -2,7 +2,15 @@
 title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Version control with git</h1></div>'
 author: "Danielle Navarro"
 date: "30 November 2018"
-output:
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--
+
   html_document:
     includes:
       in_header: header.html
@@ -10,12 +18,7 @@ output:
     highlight: textmate
     css: mystyle.css
 
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
+-->
 
 ## Installing git
 
