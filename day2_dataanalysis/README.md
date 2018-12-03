@@ -7,18 +7,21 @@ Assumed knowledge:
 
 
 
-## Part 1: Data wrangling and visualisation
+## 1: Structured workflow
 
-- structuring your workflow (scripts, RMarkdown, data copies, git)
-- janitor::clean_names 
-- tibbles
-- data wrangling with dplyr, reshaping with tidyr
-- data visualisation with ggplot2 (w. parenthetical asides about gganimate, ggmap, etc)
-- 
+- Working with git and GitHub
+- Working with R markdown and R projects
 
 
 
-## Part 2: Statistics in R
+## 2: Working with data
+
+- Data wrangling in tidyverse (readr, tibble, dplyr, tidyr)
+- Data visualisation in tidyverse (ggplot2)
+
+
+
+## 3: Inferential statistics in R
 
 - Quick coverage of classical tests. lm, aov, t.test, cor.test, chi.square
 - Slightly longer coverage of Bayes factor package?
