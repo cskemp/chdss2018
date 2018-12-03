@@ -339,12 +339,24 @@ Let's suppose I want to work with Matthew Ling and Emi Tanaka on this project. T
 
 ![](./images/addcontributor.jpg)
 
-When I click on the *Add collaborator* button, it will send an email inviting them to join the repository. Once they accept, they'll have the ability to push changes to the GitHub version. So while I'm writing this, I'm waiting for one of them to accept:
+When I click on the *Add collaborator* button, it will send an email inviting them to join the repository. Once they accept, they'll have the ability to push changes to the GitHub version. So while I'm writing this, I'm waiting for one of them to accept, this is what I can see...
 
 
 ![](./images/addcontributor2.jpg)
 
+Eventually though, one of them will come and help me out. On their side, once they've accepted it's exactly the same process as we followed when cloning it to the local machine! At their command line they'd type this...
 
+```{}
+> git clone https://github.com/djnavarro/summerschool.git
+```
+
+Then they make their changes, commit them, and then use 
+
+```{}
+> git push -u origin master
+```
+
+to push them back to GitHub.
 
 
 - Adding another contributor on GitHub
