@@ -173,18 +173,160 @@ What this is telling you is:
 - Your copy of this branch is up to date (i.e., it's the same as the *origin* on GitHub)
 - You haven't made any local changes, so you have nothing to *commit*.
 
+One really nice thing about having cloned from GitHub, is that your local repository already "knows" where the remote origin is! You can see that by typing:
+
+```{}
+> git remote --verbose
+```
+
+What you see is this:
+
+```{}
+origin  https://github.com/djnavarro/summerschool.git (fetch)
+origin  https://github.com/djnavarro/summerschool.git (push)
+```
+
+What this is telling you is that your local git repository is treating the remote GitHub version as the *origin*, both for the purposes of pulling (or fetching) *from* the remote, and for pushing *to* the remote location. 
+
+## Making local changes...
+
+Okay, next up, let's make some changes. First, open up the `README.md` file on your computer. The `.md` file extension means that this is a "plain markdown" document - it's just a text file, so you can open it in any text editor, but we'll do it in RStudio. To do that, go `File > Open File` in the menus, then select the `README.md` file. Here's what I see: 
+
+![](./images/readme_rstudio.jpg)
+
+If you click on the `Preview` button, RStudio will show you the pretty version that GitHub displays. So let's now edit it. Maybe you want to make a nicer description of what your repository is about? This is a very good place to do it! What I did is write out a very quick tutorial on markdown:
+
+![](./images/readme_rstudio2.jpg)
+
+You can see the actual markdown on the left hand side, and the preview of the output on the right hand side. 
+
+Make sure you save the document after you've made your changes! 
+
+## Stage and commit your changes locally...
+
+At this point we've made some changes to the documents, but haven't actually done anything with git. Nevertheless, git is "aware" that something has changed. To see this, let's check the `git status`. Back at the command line:
+
+```{}
+> git status
+```
+
+The output *starts* the same way as before...
+
+```{}
+On branch master
+Your branch is up to date with 'origin/master'.
+```
+
+But now there's something new content:
+
+```{}
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   README.md
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        README.html
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+What this is saying:
+
+- Git knows you have *modified* one file (`README.md`) 
+- Git also knows you have created a new file (`README.html`)
+
+These changes haven't been "committed" to your repository yet. So we should do that! One slightly counterintuitive thing about git is that making a commit is a two stage process. First you have to *stage* your changes (i.e., tell git what you're going to commit), and then *commit* those changes (i.e., actually do it). Apparently there's a good reason for this, but I can't say I've ever found it helpful. But let's do as the silly little thing asks.
+
+First, to stage our commits we use the `git add` command. We could add the files one by one, but I almost never do that. Instead, I do this:
+
+```{}
+> git add --all
+```
+
+To see what this has done, let's check our status again:
+
+```{}
+> git status
+
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        new file:   README.html
+        modified:   README.md
+```
+
+Now you can see that git has staged both of our changes. Sweet. Now it is time to `git commit`. Whenever you commit your changes, you have to write a *commit message*, which is a little note to yourself (or your collaborators) specifying what you've done. There's quite a lot that's been written about how to write good commit messages, and I'll be honest I write terrible ones. Let's not worry about that for now, and do a simple one:
+
+```{}
+> git commit -m "updated the readme.md document"
+```
+
+Notice that we've used the `-m` flag to indicate that there will be a message, and then I've written `"updated ..."` as the actual message. When I hit enter, this happens:
+
+```{}
+[master 6c0b71c] updated the readme.md document
+ 2 files changed, 218 insertions(+), 2 deletions(-)
+ create mode 100644 README.html
+ rewrite README.md (100%)
+```
+ 
+Okay, stuff has happened. Good. Let's check our status again:
+
+```{}
+>git status
+
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+```
+
+Woohoo, we have successfully made a commit!
+
+### Pushing your commit to GitHub
+
+At the moment, all your changes are local. Notice the little part of the `git status` outout that says this:
+
+```{}
+Your branch is ahead of 'origin/master' by 1 commit.
+```
+
+Git knows that your local version is now "ahead" of the remote version. We should probably `git push` that up to GitHub. This is really easy:
+
+```{}
+git push -u origin master
+```
+
+What this command is saying is push *to* the "origin" (GitHub), *from* your current local branch (which, as we were saying earlier, is called "master"). The `-u` part is short for "upstream" and it [comes in handy](https://www.quora.com/What-does-the-u-tag-mean-in-git-push-u-origin-master) later. Frankly though, I just mindlessly include the `-u` every time for the sake of my sanity. Anyway, what you will see (probably after being asked for your username and password), is this:
+
+```{}
+Enumerating objects: 6, done.
+Counting objects: 100% (6/6), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 241.74 KiB | 6.53 MiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0)
+To https://github.com/djnavarro/summerschool.git
+   7c55159..6c0b71c  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+```
+
+It's now pushed to GitHub. If I go there and take a look, I can see that the GitHub page now has changes:
+
+![](./images/updated_repository.jpg)
 
 
+Excellent. 
 
-
-- Create the repository on GitHub (the *origin*)
-- *Clone* a local copy to your computer
-- Make changes
-- Check the *status*
-- Make a local *commit* 
-- *Push* the commits back up to GitHub
-
-Any time you accidentally set fire to your computer, you can just clone the repository from GitHub to another machine and keep working.
+You now have all the skills required to use GitHub as if it were a Dropbox folder. Any time you accidentally set fire to your computer, you can just `git clone` the repository from GitHub to another machine and keep working. Admittedly, you could probably have done all this in Dropbox, but the GitHub version looks cooler, doesn't it? There are other *actual* advantages though. I promise! I wouldn't force you to learn this if there weren't!
 
 
 ## Our second workflow
@@ -194,72 +336,11 @@ Any time you accidentally set fire to your computer, you can just clone the repo
 - Using the GitHub issue tracker to work together
 
 
-## Beyond this
+## Beyond the basics?
 
-Once you're comfortable, there's more cool things you can do. Suppose you want to try out a really cool idea, but maybe it won't  work; you can create a new *branch* of the repository, which lets you make whatever changes you want. If it doesn't work, you can switch back to the master branck. If it does, you can merge the new changes back in. You can zoom forward and backward in time, inspecting the repository at different stages of development. You can create your own *fork* of someone else's repository, and if you want them to make some changes you can make a *pull request* which asks them to incorporate your code into their work. These workflows are all very cool, and a lot of them can all be done without having to leave RStudio, but we won't cover those here. 
+Once you're comfortable, there's more cool things you can do. Suppose you want to try out a really cool idea, but maybe it won't  work; you can create a new *branch* of the repository, which lets you make whatever changes you want. If it doesn't work, you can switch back to the master branck. If it does, you can merge the new changes back in. You can zoom forward and backward in time, inspecting the repository at different stages of development. You can create your own *fork* of someone else's repository, and if you want them to make some changes you can make a *pull request* which asks them to incorporate your code into their work. These workflows are all very cool, and a lot of them can all be done without having to leave RStudio, but we won't cover those here. Instead I'll suggest that when you're ready, have a read through some of these resources...
 
-Instead I'll suggest that when you're ready, have a read through [Happy Git and GitHub for the useR](http://happygitwithr.com/) as a great resource to introduce you to these things.
-
-
-## Getting started 
-
-From the Windows command prompt:
-
-```{}
-> git init
-Initialized empty Git repository in C:/Users/Dan/GitHub/myproject/.git/
-```
-
-From Mac OS terminal or Linux shell:
-
-```{}
-> git init
-Initialized empty Git repository in /home/danielle/myproject/.git/
-```
-
-
-```{}
-> git status
-
-On branch master
-
-No commits yet
-
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-
-        README.md
-```
-
-
-```{}
-> git add --all
-> git status
-
-On branch master
-
-No commits yet
-
-Changes to be committed:
-  (use "git rm --cached <file>..." to unstage)
-
-        new file:   README.md
-```
-
-
-```{}
-> git commit -m "my first commit"
-[master (root-commit) adfa917] my first commit
- 1 file changed, 3 insertions(+)
- create mode 100644 README.md
-```
-
-
-
-
-## Further resources
-
-- [Happy Git with R](http://happygitwithr.com/) by Jenny Bryan and Jim Hester
--
+- [Happy Git and GitHub for the useR](http://happygitwithr.com/) by Jenny Bryan and Jim Hester
+- [How to make your first pull request](https://github.com/thisisnic/first-contributions) by Nic Crane
 
 
