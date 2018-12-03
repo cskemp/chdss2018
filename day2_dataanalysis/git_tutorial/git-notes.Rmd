@@ -359,9 +359,75 @@ Then they make their changes, commit them, and then use
 > git push -u origin master
 ```
 
-to push them back to GitHub. Unfortunately, collaborators are just as human as you are, so these changes won't happen instantaneously. Given that Emi and Mathew both have jobs and lives of their own, the fact that I asked them to help me out on Twitter doesn't mean they're going to drop everything to solve my problems (no matter how lovely they both are). Neverthelesst working to a pretty tight deadline here, so I'm going to make some edits to *other* documents -- not the one they're going to play with -- and make local commits. What I'll do is create a new file, called `gitcheatcheet.md` that we can use to make notes, and commit those changes.
+to push them back to GitHub. Unfortunately, collaborators are just as human as you are, so these changes won't happen instantaneously. Given that Emi and Mathew both have jobs and lives of their own, the fact that I asked them to help me out on Twitter doesn't mean they're going to drop everything to solve my problems (no matter how lovely they both are). Nevertheless, I'm working to a pretty tight deadline here, so I'm going to make some edits to *other* documents -- not the one they're going to play with -- and make local commits. What I'll do is create a new file, called `gitcheatcheet.md` that we can use to make notes, and commit those changes.
 
 While I've been doing this, it turns out that one of my collaborators has updated the README, and pushed some new commits to GitHub...
+
+![](./images/collaboratorpush.jpg)
+
+Okay, now let's suppose I hadn't actually noticed this, and tried to push *my* changes to the repository! Let's see what happens:
+
+```{}
+>git push -u origin master
+
+To https://github.com/djnavarro/summerschool.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'https://github.com/djnavarro/summerschool.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+Nope. Git is angry at me now, but at least it's nice enough to tell me what the problem is. The remote branch (GitHub) has some commits that I haven't incorporated locally. Eek. Now, the nice thing is that Mathew and I were working on different files, and our changes are completely compatible with each other (more precisely there are no *conflicts*). So it's an easy fix. All I have to do is `git pull` from GitHub into my local version:
+
+
+```{}
+> git pull
+
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 4 (delta 2), reused 4 (delta 2), pack-reused 0
+Unpacking objects: 100% (4/4), done.
+From https://github.com/djnavarro/summerschool
+   6c0b71c..9cf2b40  master     -> origin/master
+Merge made by the 'recursive' strategy.
+ README.html | 8 ++++++--
+ README.md   | 4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+```
+
+Yeah yeah, whatever. The main thing to notice here is that git has automatically *merged* the changes. What that means is that Mathew's new edits have been added to my local repository, *without* overwriting mine! 
+
+Now that I've used `git pull` to incorporate his changes into my local copy, I can push mine up:
+
+```{}
+> git push -u origin master
+
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 618 bytes | 618.00 KiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/djnavarro/summerschool.git
+   9cf2b40..540dd43  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+```
+
+If I now click on the bit that says *5 commits*, GitHub will show me the commit history for this project:
+
+![](./images/commithistory.jpg)
+
+
+Better yet, if we then click on the `README.md` file on GitHub, and then click on the *Blame* tab. This will bring up a view like this:
+
+![](./images/blame.jpg)
+
+On the right hand side you can see the raw file, and on the left you can see who wrote each part, and displays the commit message that accompanies each edit.
 
 
 ### Using the issue tracker
@@ -371,7 +437,52 @@ We saw earlier that the blame tab is useful for keeping track of *who* made each
 ![](./images/issuetracker.jpg)
 
 
+Right now I have no idea what I want to do with this repository, but I do think it might be nice to have a decent cheat sheet, so I've created a new issue:
 
+![](./images/issuetracker1.jpg)
+
+
+## Pull requests!
+
+The thing about having your code up in public is that other people can suggest changes. On the one hand, that's terrifying because *everyone* feels insecure about their code, but on the other hand it's awesome because people will fix your mistakes and be really helpful! In fact, while I've been playing around with the issue tracker, that's exactly what happened:
+
+![](./images/pullrequest.jpg)
+
+Let's click on the *pull requests* link and take a look:
+
+![](./images/pullrequest2.jpg)
+
+Looks like someone wants to add a GIF to the README. Let's click on this and see if there are some more details:
+
+
+![](./images/pullrequest3.jpg)
+
+Yes, that is true. Everything is better with GIFs, so I agree with the spirit of this pull request. Still, before merging I should *probably* take a look and make sure everything is okay. I love GIFs and I do trust Emily, but still... let's click on the *files changed* tab:
+
+![](./images/pullrequest4.jpg)
+
+Okay, that makes sense: the bits in green here show the lines she wants to add to the README. (If there were deletions they'd be shown in red). So I'll click on the *Review changes*, write a polite review and then approve the changes:
+
+![](./images/pullrequest5.jpg)
+
+At this point I've reviewed and approved of the changes. So all I need to do is merge them...
+
+
+![](./images/pullrequest6.jpg)
+
+Ther are a few differnet options. I generally go with "merge commit", which directly adds all of Emily's commits to the project..
+
+![](./images/pullrequest7.jpg)
+
+GitHub asks me to confirm...
+
+![](./images/pullrequest8.jpg)
+
+And now if we go back can see that there are two new commits to the repository, Emily's changes that added the GIF, and my merge that pulled her changes into the branch:
+
+![](./images/pullrequest9.jpg)
+
+And now if we look at the README it has an animated GIF in it!
 
 ## Beyond the basics?
 
