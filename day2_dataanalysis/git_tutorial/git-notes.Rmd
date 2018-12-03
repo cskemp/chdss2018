@@ -491,6 +491,7 @@ And now if we look at the README it has an animated GIF in it!
 
 Once you're comfortable, there's more cool things you can do. Suppose you want to try out a really cool idea, but maybe it won't  work; you can create a new *branch* of the repository, which lets you make whatever changes you want. If it doesn't work, you can switch back to the master branck. If it does, you can merge the new changes back in. You can zoom forward and backward in time, inspecting the repository at different stages of development. You can create your own *fork* of someone else's repository, and if you want them to make some changes you can make a *pull request* which asks them to incorporate your code into their work. These workflows are all very cool, and a lot of them can all be done without having to leave RStudio, but we won't cover those here. Instead I'll suggest that when you're ready, have a read through some of these resources...
 
+- [Git cheat sheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf) on the GitHub web page.
 - [Happy Git and GitHub for the useR](http://happygitwithr.com/) by Jenny Bryan and Jim Hester
 - [How to make your first pull request](https://github.com/thisisnic/first-contributions) by Nic Crane
 - [Git for Scientists](https://github.com/MilesMcBain/git_4_sci) by Miles McBain.
