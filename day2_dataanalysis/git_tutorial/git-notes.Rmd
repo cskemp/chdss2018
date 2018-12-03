@@ -331,6 +331,22 @@ You now have all the skills required to use GitHub as if it were a Dropbox folde
 
 ## Our second workflow
 
+One of the appealing things about git and GitHub is that you can collaborate easily with other people, and share your work with them. Like anything in life, this can get messy in some situations, but the basics are actually pretty easy to get a handle on. In this scenario, I'm going to assume you're working together with one other person, but at no point will you both be trying to edit the same document at the same time. 
+
+### Adding a contributor on GitHub
+
+Let's suppose I want to work with Matthew Ling and Emi Tanaka on this project. They're both on GitHub, so I can go to the *Settings* tab on GitHub and then select *Collaborators* from the menu on the left. If I start typing in their names, it will search for them:
+
+![](./images/addcontributor.jpg)
+
+When I click on the *Add collaborator* button, it will send an email inviting them to join the repository. Once they accept, they'll have the ability to push changes to the GitHub version. So while I'm writing this, I'm waiting for one of them to accept:
+
+
+![](./images/addcontributor2.jpg)
+
+
+
+
 - Adding another contributor on GitHub
 - Using `pull` and `push` to keep work in sync
 - Using the GitHub issue tracker to work together
@@ -342,5 +358,5 @@ Once you're comfortable, there's more cool things you can do. Suppose you want t
 
 - [Happy Git and GitHub for the useR](http://happygitwithr.com/) by Jenny Bryan and Jim Hester
 - [How to make your first pull request](https://github.com/thisisnic/first-contributions) by Nic Crane
-
+- [Git for Scientists](https://github.com/MilesMcBain/git_4_sci) by Miles McBain.
 
