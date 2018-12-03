@@ -344,6 +344,9 @@ When I click on the *Add collaborator* button, it will send an email inviting th
 
 ![](./images/addcontributor2.jpg)
 
+
+### Working together
+
 Eventually though, one of them will come and help me out. On their side, once they've accepted it's exactly the same process as we followed when cloning it to the local machine! At their command line they'd type this...
 
 ```{}
@@ -356,12 +359,18 @@ Then they make their changes, commit them, and then use
 > git push -u origin master
 ```
 
-to push them back to GitHub.
+to push them back to GitHub. Unfortunately, collaborators are just as human as you are, so these changes won't happen instantaneously. Given that Emi and Mathew both have jobs and lives of their own, the fact that I asked them to help me out on Twitter doesn't mean they're going to drop everything to solve my problems (no matter how lovely they both are). Neverthelesst working to a pretty tight deadline here, so I'm going to make some edits to *other* documents -- not the one they're going to play with -- and make local commits. What I'll do is create a new file, called `gitcheatcheet.md` that we can use to make notes, and commit those changes.
+
+While I've been doing this, it turns out that one of my collaborators has updated the README, and pushed some new commits to GitHub...
 
 
-- Adding another contributor on GitHub
-- Using `pull` and `push` to keep work in sync
-- Using the GitHub issue tracker to work together
+### Using the issue tracker
+
+We saw earlier that the blame tab is useful for keeping track of *who* made each change to the document, as well as *when* and *why* they did it (assuming that they wrote useful commit messages!) This is a nice automatic collaboration feature. However, often when working on a project you'll want to leave notes to yourself, have discussions with collaborators, flag issues that still need to be resolved and so on. This is where the GitHub issue tracker is useful:
+
+![](./images/issuetracker.jpg)
+
+
 
 
 ## Beyond the basics?
