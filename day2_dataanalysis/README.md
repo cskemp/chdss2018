@@ -7,17 +7,17 @@ Assumed knowledge:
 
 
 
-## 1: Structured workflow
+## Structured workflow
 
-- Working with git and GitHub
-- Working with R markdown and R projects
+- Part 1: Working with git and GitHub
+- Part 2: Working with R markdown and R projects
 
 
 
-## 2: Working with data
+## Working with data
 
-- Data wrangling in tidyverse (readr, tibble, dplyr, tidyr)
-- Data visualisation in tidyverse (ggplot2)
+- Part 3: Data wrangling in tidyverse (readr, tibble, dplyr, tidyr)
+- Part 4: Data visualisation in tidyverse (ggplot2)
 
 
 
