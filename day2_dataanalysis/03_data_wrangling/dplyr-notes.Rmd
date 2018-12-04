@@ -47,20 +47,36 @@ Step 1 is making sure you have the packages:
 library(here)
 library(tidyverse)
 library(janitor)
+library(skimr)
 ```
 
 Step 2 is creating an RMarkdown document that will contain your analyses.
 
 Step 3 is loading the data.
 ```{r}
-data_file <- here("analysis",)
+data_location <- here("analysis","data","frames_ex2.csv")
+data_location
 ```
 
+Then
 
-- Make sure you have the packages
-- Create an R Markdown document
-- Load the data
-- Glimpse the data
+```{r}
+frames <- read_csv(file = data_location)
+frames
+```
+
+It's not a bad idea to take a quick `glimpse()` at the data:
+
+```{r}
+glimpse(frames)
+```
+
+I'm also a fan of the `skim()` function for getting descriptive statistics quickly:
+
+```{r}
+skim(frames)
+```
+
 
 practical notes
 
