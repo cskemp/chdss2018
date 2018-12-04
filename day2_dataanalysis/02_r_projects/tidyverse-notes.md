@@ -15,38 +15,6 @@ Danielle Navarro
     css: mystyle.css
 
 -->
-RStudio projects
-----------------
-
-Why work in projects?
-
--   RStudio will help you keep things tidy
--   There are packages (e.g., the `here` package) that can detect the `.Rproj` file and you can specify file paths relative to the project root.
-
-How to do it
-
--   Go to the top right corner in RStudio, click on the dropdown menu, and select "New Project".
--   Because we're going to work in the existing folder that we created for the git tutorial (`summerschool`) select "existing directory" and then browse for the correct location.
--   Once you create the project, you'll see a new file called `summerschool.Rproj`.
-
-![](./images/new_rstudio_project1.jpg) ![](./images/new_rstudio_project2.jpg) ![](./images/new_rstudio_project3.jpg) ![](./images/new_rstudio_project4.jpg)
-
-Any time you want to switch between projects, use the drop down menu. RStudio will automatically change the working directory, start a new R session for you, and open up whatever files you had open last time you wer using it.
-
-Creating the structure for our project:
----------------------------------------
-
--   experiment (stuff from day 1)
--   analysis (today!!)
--   models (stuff from day 3)
-
-The analysis folder we'll subdivide into two folders:
-
--   data
--   docs
-
-In real life, the data that you'd start with in the data folder would be very messy and require some advanced data wrangling skills, but we're not there yet so let's jump forward in time and add a "tidy" data set.
-
 The frames data
 ---------------
 
@@ -58,33 +26,3 @@ The variable key: - id: the participant id number - gender: male or female - age
 
 R Markdown documents
 --------------------
-
-Until now our code has been written in *scripts*, and our documentation has been written using *markdown*. Both are nice things to have - scripts are good for organising your R commands, and markdown is an efficient way to write commentaries and notes.
-
-Wouldn't it be nice to have some way to do both of these things in a single document? Yes of course it would. Enter R Markdown!
-
-To create an R Markdown document use the Rstudio file menu:
-
-![](./images/new_rmarkdown.jpg)
-
-Then give your document a title (and choose output type, which we'll assume to be HTML).
-
-![](./images/new_rmarkdown2.jpg)
-
-This creates untitled R Markdown document in the source pane:
-
-![](./images/new_rmarkdown3.jpg)
-
-Save it to the `docs` folder, with the name `exploration.Rmd`. So now you have this:
-
-![](./images/new_rmarkdown4.jpg)
-
-Click on the `Knit` button to see what happens
-
-### Structure of an R Markdown document
-
--   the bit at the top is the "yaml header" (ignore it for now)
--   anything shaded in grey (between the backticks) is a *code chunk* and is treated just like an R script
--   anything in white treated like Markdown.
-
-Play around with this for a bit! Get a feel for how it works, then delete everything after line 10 (i.e., leave the header, and the first code chunk). Now we're ready to go!
