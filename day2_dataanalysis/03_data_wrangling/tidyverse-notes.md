@@ -1,5 +1,5 @@
 <h1 class="title toc-ignore display-3">
-RStudio Projects & R Markdown
+Diving into the tdiyverse with dplyr
 </h1>
 ================
 Danielle Navarro
@@ -24,5 +24,32 @@ In this particular experiment we didn’t show people animals (though we have do
 
 The variable key: - id: the participant id number - gender: male or female - age: numeric, in years - condition: (between subject). category sampling = people were told observations were selected on the basis of their category membership (e.g., because it's a small bird, or a small rock, or whatever) vs property sampling = people were told observations were selected because of a property they posses (e.g., it has plaxium blood, or a plaxium coating). - sample\_size: (within subject) small, medium, large - indicating how many observations they'd been shown at this point in the experiment - n\_obs: (within subject). same as "sample\_size", but it's the actual number (2, 6 or 12) - test\_item: (within subject). what stimulus are they now being shown? numeric: 1 to 7. this is ordinal (or really, quasi-interval) where items 1-2 are essentially identical to observations they'd seen before, and 3-7 become progressively less similar (e.g., bigger bird, bigger rock, whatever...) - response: (the outcome, within subject). the rating the person gave (0-9 scale) for "how likely is it that this new stimulus possesses the property (e.g., plaxium blood)?" where 0 = not at all, 9 = certain (or something like that) There's quite a bit going on in the data since it's a two within-subject and one between-subject manipulation
 
-R Markdown documents
---------------------
+1. Getting started
+------------------
+
+-   Make sure you have the packages
+-   Create an R Markdown document
+-   Load the data
+-   Glimpse the data
+
+practical notes
+
+-   irl you'd hae to do a lot of ugly data cleaning to get to this point
+-   Mention that data vis is a later section
+
+2. Basic operations with dplyr
+------------------------------
+
+-   Introduce the pipe operator
+-   Group and summarise (and ungroup)
+-   Arrange, filter, select
+-   Mutate
+
+3. Other useful things
+----------------------
+
+-   Gather and spread
+-   Unify and separate
+-   janitor::clean\_names
+-   Tiny bit of stringr
+-   Mention the existence of purrr & lubridate

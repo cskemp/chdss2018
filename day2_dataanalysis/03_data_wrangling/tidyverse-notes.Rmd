@@ -1,5 +1,5 @@
 ---
-title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">RStudio Projects & R Markdown</h1></div>'
+title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Diving into the tdiyverse with dplyr</h1></div>'
 author: "Danielle Navarro"
 date: "4 December 2018"
 output: github_document
@@ -39,6 +39,35 @@ The variable key:
 - response: (the outcome, within subject). the rating the person gave (0-9 scale) for "how likely is it that this new stimulus possesses the property (e.g., plaxium blood)?" where 0 = not at all, 9 = certain (or something like that)
 There's quite a bit going on in the data since it's a two within-subject and one between-subject manipulation
 
-## R Markdown documents
+## 1. Getting started
+
+- Make sure you have the packages
+- Create an R Markdown document
+- Load the data
+- Glimpse the data
+
+practical notes
+
+- irl you'd hae to do a lot of ugly data cleaning to get to this point
+- Mention that data vis is a later section
+
+## 2. Basic operations with dplyr
+
+- Introduce the pipe operator
+- Group and summarise (and ungroup)
+- Arrange, filter, select
+- Mutate
+
+## 3. Other useful things
+
+- Gather and spread
+- Unify and separate
+- janitor::clean_names
+- Tiny bit of stringr
+- Mention the existence of purrr & lubridate
+
+
+
+
 
 
