@@ -41,6 +41,22 @@ There's quite a bit going on in the data since it's a two within-subject and one
 
 ## 1. Getting started
 
+Step 1 is making sure you have the packages:
+
+```{r}
+library(here)
+library(tidyverse)
+library(janitor)
+```
+
+Step 2 is creating an RMarkdown document that will contain your analyses.
+
+Step 3 is loading the data.
+```{r}
+data_file <- here("analysis",)
+```
+
+
 - Make sure you have the packages
 - Create an R Markdown document
 - Load the data
