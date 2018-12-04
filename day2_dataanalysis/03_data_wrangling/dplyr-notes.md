@@ -33,22 +33,24 @@ Step 1 is making sure you have the packages:
 library(here)
 ```
 
-    ## here() starts at C:/Users/Dan/GitHub/chdss2018/day2_dataanalysis/03_data_wrangling
+    ## here() starts at /Users/dan/GitHub/chdss2018/day2_dataanalysis/03_data_wrangling
 
 ``` r
 library(tidyverse)
 ```
 
-    ## -- Attaching packages ---------------------------------------------------- tidyverse 1.2.1 --
+    ## ── Attaching packages ──────────────────────────────────── tidyverse 1.2.1 ──
 
-    ## v ggplot2 3.1.0     v purrr   0.2.5
-    ## v tibble  1.4.2     v dplyr   0.7.8
-    ## v tidyr   0.8.2     v stringr 1.3.1
-    ## v readr   1.1.1     v forcats 0.3.0
+    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
+    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+    ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
+    ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## -- Conflicts ------------------------------------------------------- tidyverse_conflicts() --
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
+    ## Warning: package 'dplyr' was built under R version 3.5.1
+
+    ## ── Conflicts ─────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
 
 ``` r
 library(janitor)
@@ -64,7 +66,7 @@ data_location <- here("analysis","data","frames_ex2.csv")
 data_location
 ```
 
-    ## [1] "C:/Users/Dan/GitHub/chdss2018/day2_dataanalysis/03_data_wrangling/analysis/data/frames_ex2.csv"
+    ## [1] "/Users/dan/GitHub/chdss2018/day2_dataanalysis/03_data_wrangling/analysis/data/frames_ex2.csv"
 
 Then
 
@@ -130,19 +132,19 @@ skim(frames)
     ##  n obs: 4725 
     ##  n variables: 8 
     ## 
-    ## -- Variable type:character ------------------------------------------------------------------
+    ## ── Variable type:character ──────────────────────────────────────────────────
     ##     variable missing complete    n min max empty n_unique
     ##    condition       0     4725 4725   8   8     0        2
     ##       gender       0     4725 4725   4   6     0        2
     ##  sample_size       0     4725 4725   5   6     0        3
     ## 
-    ## -- Variable type:integer --------------------------------------------------------------------
+    ## ── Variable type:integer ────────────────────────────────────────────────────
     ##   variable missing complete    n   mean    sd p0 p25 p50 p75 p100     hist
-    ##        age       0     4725 4725  34.92 11.63 20  27  32  40   84 <U+2587><U+2587><U+2583><U+2582><U+2581><U+2581><U+2581><U+2581>
-    ##         id       0     4725 4725 113    64.96  1  57 113 169  225 <U+2587><U+2587><U+2587><U+2587><U+2587><U+2587><U+2587><U+2587>
-    ##      n_obs       0     4725 4725   6.67  4.11  2   2   6  12   12 <U+2587><U+2581><U+2581><U+2587><U+2581><U+2581><U+2581><U+2587>
-    ##   response       0     4725 4725   4.9   3.04  0   2   5   8    9 <U+2586><U+2582><U+2582><U+2583><U+2582><U+2582><U+2583><U+2587>
-    ##  test_item       0     4725 4725   4     2     1   2   4   6    7 <U+2587><U+2587><U+2587><U+2587><U+2581><U+2587><U+2587><U+2587>
+    ##        age       0     4725 4725  34.92 11.63 20  27  32  40   84 ▇▇▃▂▁▁▁▁
+    ##         id       0     4725 4725 113    64.96  1  57 113 169  225 ▇▇▇▇▇▇▇▇
+    ##      n_obs       0     4725 4725   6.67  4.11  2   2   6  12   12 ▇▁▁▇▁▁▁▇
+    ##   response       0     4725 4725   4.9   3.04  0   2   5   8    9 ▆▂▂▃▂▂▃▇
+    ##  test_item       0     4725 4725   4     2     1   2   4   6    7 ▇▇▇▇▁▇▇▇
 
 practical notes
 
