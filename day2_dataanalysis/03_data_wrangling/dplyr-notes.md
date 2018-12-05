@@ -389,11 +389,180 @@ average_response_small
     ## 13         6 property      3.68          0.409
     ## 14         7 property      3.67          0.407
 
-3. Other useful things
-----------------------
+Gather and spread
+-----------------
 
--   Gather and spread
--   Unify and separate
--   janitor::clean\_names
--   Tiny bit of stringr
--   Mention the existence of purrr & lubridate
+What if we want to have the two conditions as separate variables?
+
+``` r
+average_response_small %>%
+  spread(key = condition, value = generalisation)
+```
+
+    ## # A tibble: 14 x 4
+    ##    test_item response category property
+    ##        <int>    <dbl>    <dbl>    <dbl>
+    ##  1         1     5.78   NA        0.643
+    ##  2         1     6.07    0.674   NA    
+    ##  3         2     6.21   NA        0.690
+    ##  4         2     6.26    0.696   NA    
+    ##  5         3     5.24   NA        0.583
+    ##  6         3     5.87    0.652   NA    
+    ##  7         4     4.68   NA        0.521
+    ##  8         4     5.11    0.568   NA    
+    ##  9         5     3.99   NA        0.443
+    ## 10         5     4.55    0.506   NA    
+    ## 11         6     3.68   NA        0.409
+    ## 12         6     4.16    0.462   NA    
+    ## 13         7     3.67   NA        0.407
+    ## 14         7     3.98    0.442   NA
+
+Why did that not work? Remember we still have `response` in the data, and there's a unique value of response for everything. Gr. Okay, so let's select out that one before spreading...
+
+``` r
+wide_avrs <- average_response_small %>%
+  select(-response) %>%
+  spread(key = condition, value = generalisation)
+
+wide_avrs
+```
+
+    ## # A tibble: 7 x 3
+    ##   test_item category property
+    ##       <int>    <dbl>    <dbl>
+    ## 1         1    0.674    0.643
+    ## 2         2    0.696    0.690
+    ## 3         3    0.652    0.583
+    ## 4         4    0.568    0.521
+    ## 5         5    0.506    0.443
+    ## 6         6    0.462    0.409
+    ## 7         7    0.442    0.407
+
+Want to `gather()` it back into long form?
+
+``` r
+wide_avrs %>% gather(key = "condition", value = "generalisation", category, property)
+```
+
+    ## # A tibble: 14 x 3
+    ##    test_item condition generalisation
+    ##        <int> <chr>              <dbl>
+    ##  1         1 category           0.674
+    ##  2         2 category           0.696
+    ##  3         3 category           0.652
+    ##  4         4 category           0.568
+    ##  5         5 category           0.506
+    ##  6         6 category           0.462
+    ##  7         7 category           0.442
+    ##  8         1 property           0.643
+    ##  9         2 property           0.690
+    ## 10         3 property           0.583
+    ## 11         4 property           0.521
+    ## 12         5 property           0.443
+    ## 13         6 property           0.409
+    ## 14         7 property           0.407
+
+Exercise. Try spreading and gathering by test item rather than condition
+
+Getting fancier
+---------------
+
+``` r
+frames %>% 
+  group_by(test_item, sample_size, condition) %>%
+  summarise(response = mean(response)) %>%
+  spread(key = sample_size, value = response)
+```
+
+    ## # A tibble: 14 x 5
+    ## # Groups:   test_item [7]
+    ##    test_item condition large medium small
+    ##        <int> <chr>     <dbl>  <dbl> <dbl>
+    ##  1         1 category   7.60   7.32  6.07
+    ##  2         1 property   7.16   6.66  5.78
+    ##  3         2 category   7.51   7.17  6.26
+    ##  4         2 property   7.20   6.95  6.21
+    ##  5         3 category   6.39   5.98  5.87
+    ##  6         3 property   5.23   5.49  5.24
+    ##  7         4 category   5.39   4.97  5.11
+    ##  8         4 property   3.07   3.56  4.68
+    ##  9         5 category   4.72   4.22  4.55
+    ## 10         5 property   2.26   2.75  3.99
+    ## 11         6 category   4.43   3.85  4.16
+    ## 12         6 property   1.91   2.50  3.68
+    ## 13         7 category   4.18   3.61  3.98
+    ## 14         7 property   1.90   2.19  3.67
+
+Hm, those are ordered wrong. Why? Well, they're alphabetical.
+
+``` r
+frames %>% 
+  group_by(test_item, sample_size, condition) %>%
+  summarise(response = mean(response)) %>%
+  ungroup() %>%
+  mutate(
+    sample_size = sample_size %>%
+      as_factor() %>%
+      fct_relevel("small","medium","large")
+  ) %>%
+  spread(key = sample_size, value = response)
+```
+
+    ## # A tibble: 14 x 5
+    ##    test_item condition small medium large
+    ##        <int> <chr>     <dbl>  <dbl> <dbl>
+    ##  1         1 category   6.07   7.32  7.60
+    ##  2         1 property   5.78   6.66  7.16
+    ##  3         2 category   6.26   7.17  7.51
+    ##  4         2 property   6.21   6.95  7.20
+    ##  5         3 category   5.87   5.98  6.39
+    ##  6         3 property   5.24   5.49  5.23
+    ##  7         4 category   5.11   4.97  5.39
+    ##  8         4 property   4.68   3.56  3.07
+    ##  9         5 category   4.55   4.22  4.72
+    ## 10         5 property   3.99   2.75  2.26
+    ## 11         6 category   4.16   3.85  4.43
+    ## 12         6 property   3.68   2.50  1.91
+    ## 13         7 category   3.98   3.61  4.18
+    ## 14         7 property   3.67   2.19  1.90
+
+What if we want to spread by two variables at once!!!
+
+``` r
+new_data <- frames %>% 
+  group_by(test_item, sample_size, condition) %>%
+  summarise(response = mean(response)) %>%
+  unite(col = "cond_ss", condition, sample_size) 
+```
+
+... then you would `spread()` using `cond_ss` as the `key`.
+
+Which brings us to a question. What if you get a data set where you have a variable like `cond_ss` that needs to be separated into two? Well...
+
+``` r
+new_data %>% separate(col = cond_ss, into = c("condition", "sample_size"))
+```
+
+    ## # A tibble: 42 x 4
+    ## # Groups:   test_item [7]
+    ##    test_item condition sample_size response
+    ##        <int> <chr>     <chr>          <dbl>
+    ##  1         1 category  large           7.60
+    ##  2         1 property  large           7.16
+    ##  3         1 category  medium          7.32
+    ##  4         1 property  medium          6.66
+    ##  5         1 category  small           6.07
+    ##  6         1 property  small           5.78
+    ##  7         2 category  large           7.51
+    ##  8         2 property  large           7.20
+    ##  9         2 category  medium          7.17
+    ## 10         2 property  medium          6.95
+    ## # ... with 32 more rows
+
+Other notes?
+------------
+
+-   The data that we were given has nice variable names. No spaces, no fancy characters, etc. It's a pain to rename variables one at a time. Check out the `janitor` package (and the `clean_names()` function specifically)
+-   If you need to do text manipulation, the `stringr` package is your friend
+-   If you need to parse dates (pray you don't because they suck), the `lubridate` package is the least painful way known
+-   Later on, if you find yourself writing lots of loops in your R code an they're running really slowly, the `purrr` package will be your friend, but it's not easy to learn so give it a bit of time.
