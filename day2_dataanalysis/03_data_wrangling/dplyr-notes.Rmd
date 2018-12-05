@@ -77,6 +77,7 @@ I'm also a fan of the `skim()` function for getting descriptive statistics quick
 skim(frames)
 ```
 
+(Side note: the histograms in skim are text-based and rely on unicode characters. In some cases Windows does weird things and doesn't display them - we'll talk about data vis later)s
 
 practical notes
 
@@ -85,10 +86,126 @@ practical notes
 
 ## 2. Basic operations with dplyr
 
-- Introduce the pipe operator
-- Group and summarise (and ungroup)
-- Arrange, filter, select
-- Mutate
+### Pipes
+
+Data wrangling in R used to be hard. Ever since the `tidyverse` family of packages appeared in a stable form, it's become easy. However, it requires you to have a bit of a shift in mindset:
+
+```{r, eval=FALSE}
+frames %>% skim(.)
+```
+
+The key idea behind `%>%` is a bit of "magic", in which the command is reorganised so that the "thing" on the left (i.e., `frames`) gets inserted into the expression on the right, replacing the `.`). So when you type the command above, it gets reorganised into this...
+
+```{r, eval=FALSE}
+skim(frames)
+```
+
+... and then this reorganised command is evaluated. Why is that useful? Well, imagine we have a series of operations we want to do, where the output of the first operation is fed (or "piped") in as the input to the second, and so on. In piped code, it looks like this:
+```{r, eval=FALSE}
+output <- frames %>% 
+  do_thing1(.) %>%
+  do_thing2(.) %>%
+  do_thing3(.) %>%
+  do_thing4(.)
+```
+
+In traditional code, it would look like this:
+```{r, eval=FALSE}
+output <- do_thing4(
+  do_thing3(
+    do_thing2(
+      do_thing1(
+        frames
+      )
+    )
+  )
+)
+```
+
+which forces you to start reading in the middle and then upwards. It's pretty uncomfortable to read as it is, and it gets *much* worse when each of your `do_thing` functions has additional arguments. So in practice we would write it like this, 
+
+```{r, eval=FALSE}
+a <- do_thing1(frames)
+b <- do_thing2(a)
+c <- do_thing3(b)
+output <- do_thing4(c)
+```
+
+which is a little nicer, but the `a`, `b` and `c` values are just dummy variables that we don't actually want, so then you have to get rid of them. Piped code makes it much more readable, so from now on we'll tend to work with pipes. 
+
+### Group, summarise, arrange, filter, select, mutate
+
+Averaging across subjects. 
+
+```{r}
+average_response <- frames %>%
+  group_by(test_item, sample_size, n_obs, condition) %>%
+  summarise(response = mean(response))
+```
+
+Now let's look
+
+```{r}
+average_response
+```
+
+What if we want to include only some cases (e.g., the small sample size)? The `filter()` command:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small")
+```
+
+Hm, this is nice, but I'd prefer to have it sorted by condition rather than by test item. The `arrange()` function will do that:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition)
+```
+
+Okay, but do we really need the sample size variables? Maybe I only want to `select()` the other three variables:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition) %>%
+  select(test_item, condition, response)
+```
+
+Wait why doesn't that work? The `dplyr` package is pretty picky about grouping variables, and won't let you drop them! Remember, to construct the `average_response` data set, we grouped the original `frames` data, and when we used `group_by()` to do this, R has retained some information about this grouping (hidden in an invisible attribute). So if you do want to get rid of this, you'll need to `ungroup()` before you `select()`. So now this version does what we're expecting:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition) %>%
+  ungroup() %>%
+  select(test_item, condition, response)
+```
+
+At this point, our "chain" of piped operations is getting quite long, and maybe we'd like to save the output to a new variable!
+
+```{r}
+average_response_small <- average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition) %>%
+  ungroup() %>%
+  select(test_item, condition, response)
+```
+
+
+The response data are on a 0 to 9 scale, but maybe it makes more sense to rescale so it to a "generalisation" value that ranges from 0 to 1. That's a simple transformation (divide by 9), but how do we create a new variable inside the data frame? Enter `mutate()`
+
+```{r}
+average_response_small <- average_response_small %>%
+  mutate(generalisation = response/9)
+```
+
+Now:
+
+```{r}
+average_response_small
+```
 
 ## 3. Other useful things
 
