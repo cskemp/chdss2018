@@ -23,69 +23,57 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(here)
 library(tidyverse)
+library(lme4)
 frames <- read_csv(here("analysis","data","frames_ex2.csv"))
 ```
 
-## Mixed models 1
+
+
+## Example 1: A simple mixed model
+
+To get started with mixed models, we will look at a version of the `frames` data that is a little more complex than the `tinyframes` data from the last section, but not quite the full thing yet. Specifically, what we'll do is take the (within-subject) average responses across every `test_item`, but we *won't* average across the different values of `n_obs`. That gives us a `modestframes` data set:
 
 ```{r}
-library(lme4)
-```
-
-```{r}
-frames_ss <- frames %>% 
+modestframes <- frames %>% 
   group_by(id, age, condition, n_obs) %>%
   summarise(response = mean(response)) %>%
   ungroup()
-frames_ss
-```
 
-<!--
-Let's do something boring. Same models:
-
-```{r}
-mod1 <- lmer(formula = response ~ 1 + (1|id), data = frames_ss)
-mod2 <- lmer(formula = response ~ condition + (1|id), data = frames_ss)
-mod3 <- lmer(formula = response ~ condition + age + (1|id), data = frames_ss)
+glimpse(modestframes)
 ```
-
-```{r}
-anova(mod1, mod2, mod3)
-```
--->
 
 
 Sequence of models:
 
-```{r}
-mod1 <- lmer(formula = response ~ 1 + (1|id), data = frames_ss)
-mod2 <- lmer(formula = response ~ condition + (1|id), data = frames_ss)
-mod3 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames_ss)
-mod4 <- lmer(formula = response ~ condition + age + (1 + n_obs|id), data = frames_ss)
+```{r modestframeslmer, cache = TRUE}
+modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
+modest2 <- lmer(formula = response ~ condition + (1|id), data = modestframes)
+modest3 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = modestframes)
+modest4 <- lmer(formula = response ~ condition + age + (1 + n_obs|id), data = modestframes)
 ```
 
 Okay let's compare these models in sequence:
 
 ```{r}
-anova(mod1, mod2, mod3, mod4)
+anova(modest1, modest2, modest3, modest4)
 ```
 
-So `mod3` looks good:
+So `modest3` looks good:
 
 ```{r}
-summary(mod3)
+summary(modest3)
 ```
 
 Add a column to the data with the fitted values:
 
 ```{r}
-frames_ss$modelfit <- predict(mod3)
+modestframes$modelfit <- predict(modest3)
 ```
 
 Plot fitted values against data as a check:
 
 ```{r}
-frames_ss %>% 
+modestframes %>% 
   ggplot(aes(x = modelfit, y = response)) + 
   geom_point() + 
   facet_grid(condition ~ n_obs) + 
@@ -94,10 +82,9 @@ frames_ss %>%
 
 Let's explore this a bit more substantively:
 
-
 ```{r}
-whichids <- sample(unique(frames_ss$id), 50) 
-frames_ss %>%
+whichids <- sample(unique(modestframes$id), 50) 
+modestframes %>%
   filter(id %in% whichids) %>%
   ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
   geom_point(show.legend = FALSE) + 
@@ -106,7 +93,7 @@ frames_ss %>%
 ```
   
 
-## Mixed models 2
+## Example 2: Mixed models with more complex designs
 
 
 ```{r}
@@ -119,27 +106,28 @@ frames %>%
   facet_wrap(~ id)
 ```
 
-```{r}
-mod1 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames)
-mod2 <- lmer(formula = response ~ condition + (1 + test_item + n_obs|id), data = frames)
-mod3 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
+```{r linframes, cache = TRUE}
+linframes1 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames)
+linframes2 <- lmer(formula = response ~ condition + (1 + test_item + n_obs|id), data = frames)
+linframes3 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
 ```
 
 ```{r}
-anova(mod1, mod2, mod3)
+anova(linframes1, linframes2, linframes3)
 ```
 
 ```{r}
-summary(mod3)
+summary(linframes3)
 ```
 
 ```{r}
-frames$modelfit <- predict(mod3)
-frames$residuals <- residuals(mod3)
+linframes <- frames
+linframes$modelfit <- predict(linframes3)
+linframes$residuals <- residuals(linframes3)
 ```
 
 ```{r} 
-frames %>%
+linframes %>%
   filter(id %in% whichids) %>%
   ggplot(aes(x = test_item, y = response, shape = condition, colour = factor(n_obs))) +
   geom_point() + 
@@ -151,21 +139,24 @@ frames %>%
 
 ## Generalised linear mixed models
 
+```{r}
+glmerframes <- frames %>% mutate(generalisation = (response+.1)/9.2)
+```
+
 ```{r glmer, cache=TRUE}
-frames <- frames %>% mutate(generalisation = (response+.1)/9.2)
-mod <- glmer(
+logitmod <- glmer(
   formula = generalisation ~ condition + test_item + n_obs + (1 + test_item + n_obs|id), 
   family = gaussian(link = "logit"), 
-  data = frames)
+  data = glmerframes)
 ```
 
 ```{r}
-summary(mod)
+summary(logitmod)
 
-frames$modelfit <- predict(mod, type="response")
-frames$residuals <- residuals(mod, type="response")
+glmerframes$modelfit <- predict(logitmod, type="response")
+glmerframes$residuals <- residuals(logitmod, type="response")
 
-frames %>%
+glmerframes %>%
   filter(id %in% whichids) %>%
   ggplot(aes(x = test_item, y = generalisation, shape = condition, colour = factor(n_obs))) +
   geom_point() + 
