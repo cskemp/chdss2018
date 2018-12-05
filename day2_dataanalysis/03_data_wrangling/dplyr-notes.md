@@ -566,3 +566,6 @@ Other notes?
 -   If you need to do text manipulation, the `stringr` package is your friend
 -   If you need to parse dates (pray you don't because they suck), the `lubridate` package is the least painful way known
 -   Later on, if you find yourself writing lots of loops in your R code an they're running really slowly, the `purrr` package will be your friend, but it's not easy to learn so give it a bit of time.
+-   Say something about merging data with the various join functions!
+-   The RYouWithMe series on the RLadies-Sydney website covers similar territory to this (with different data) and has nice screencasts
+-   Add links to relevant sections in PSYR.
