@@ -205,7 +205,7 @@ output <- do_thing4(c)
 
 which is a little nicer, but the `a`, `b` and `c` values are just dummy variables that we don't actually want, so then you have to get rid of them. Piped code makes it much more readable, so from now on we'll tend to work with pipes.
 
-### Group, summarise, arrange, filter, select, mutate
+### Group, summarise
 
 Averaging across subjects.
 
@@ -236,6 +236,32 @@ average_response
     ##  9         2 medium          6 category      7.17
     ## 10         2 medium          6 property      6.95
     ## # ... with 32 more rows
+
+What statistics can we calculate besides the mean?
+
+``` r
+frames %>% 
+  group_by(test_item) %>%
+  summarise(
+    mean_resp = mean(response),
+    sd_resp = sd(response),
+    count = n()
+  )
+```
+
+    ## # A tibble: 7 x 4
+    ##   test_item mean_resp sd_resp count
+    ##       <int>     <dbl>   <dbl> <int>
+    ## 1         1      6.77    2.56   675
+    ## 2         2      6.88    2.10   675
+    ## 3         3      5.71    2.41   675
+    ## 4         4      4.48    2.68   675
+    ## 5         5      3.76    2.81   675
+    ## 6         6      3.43    2.99   675
+    ## 7         7      3.26    3.11   675
+
+Arrange, filter, select, mutate
+-------------------------------
 
 What if we want to include only some cases (e.g., the small sample size)? The `filter()` command:
 
