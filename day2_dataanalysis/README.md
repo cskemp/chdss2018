@@ -21,7 +21,7 @@ Assumed knowledge:
 
 
 
-## 3: Inferential statistics in R
+## Inferential statistics in R
 
 - Quick coverage of classical tests. lm, aov, t.test, cor.test, chi.square
 - Slightly longer coverage of Bayes factor package?

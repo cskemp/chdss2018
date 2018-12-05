@@ -1,0 +1,301 @@
+---
+title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Inferential statistics in R</h1></div>'
+author: "Danielle Navarro"
+date: "5 December 2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--
+
+  html_document:
+    includes:
+      in_header: header.html
+    theme: flatly
+    highlight: textmate
+    css: mystyle.css
+
+-->
+
+```{r}
+library(here)
+library(tidyverse)
+frames <- read_csv(here("analysis","data","frames_ex2.csv"))
+```
+
+## What we aren't going to do!
+
+Base R comes with a lot of classical null hypothesis tests built in. The functions for these are all pretty similar. We're not going to talk about them at all, because they're comparatively easy to learn and it's not the best use of our time! But here are some: 
+
+- t.test
+- chisq.test
+- prop.test
+- binom.test
+- wilcox.test
+- cor.test
+- ks.test
+
+
+## Linear models
+
+### Relationship between linear models, ANOVA and t-test
+
+Average within subject so there's just one response per person:
+
+```{r}
+frames_small <- frames %>%
+  group_by(id, age, condition) %>%
+  summarise(
+    response = mean(response)
+    ) %>%
+  ungroup()
+frames_small
+```
+
+Imagining this were our data, we'd typically calculate mean and standard deviation for each condition, across participant. We might also check the number of people in each group:
+
+```{r}
+frames_small %>%
+  group_by(condition) %>%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+```
+
+Is this a "significant" difference? Traditional solution is the t-test:
+
+```{r}
+t.test(formula = response ~ condition, data = frames_small, var.equal = TRUE)
+```
+
+Let's try to reframe this a little in term of the actual hypotheses. Normally it'd be H0 and H1, but I'm going to refer to the null hypothesis as model 1 and the alternative as model 2:
+
+```{r}
+mod1 <- lm(formula = response ~ 1, data = frames_small) 
+mod2 <- lm(formula = response ~ condition, data = frames_small)
+```
+
+Now:
+
+```{r}
+anova(mod1, mod2)
+```
+
+- notice the $p$-values are the same
+- the test statistics are related: $t = \sqrt{F}$
+- the residual df in the ANOVA table is the same as the t-test df
+
+Note that this is a slightly different ANOVA table than what you might be expecting to see. A more traditional version looks like this:
+
+```{r}
+anova(lm(response ~ condition, frames_small))
+```
+
+But it's essentially the same.
+
+### Linear modelling
+
+Maybe we want to check to see if there's an effect of age?
+
+```{r}
+frames_small %>% 
+  ggplot(aes(x = age, y = response, colour = condition)) + 
+  geom_smooth(method = "lm") + 
+  geom_point()
+```
+
+Doesn't look very likely, but let's run the model anyway:
+
+```{r}
+summary(lm(
+  formula = response ~ condition + age,
+  data = frames_small
+))
+```
+
+Hm
+
+```{r}
+mod1 <- lm(formula = response ~ 1, data = frames_small) 
+mod2 <- lm(formula = response ~ condition, data = frames_small)
+mod3 <- lm(formula = response ~ condition + age, data = frames_small)
+```
+
+One way to analyse this is:
+
+```{r}
+summary(mod3)
+```
+
+Alternatively, we could do this:
+
+```{r}
+anova(mod1, mod2, mod3)
+```
+
+Traditionally the way statistics is taught frames this model choice problem as a hypothesis testing problem. It doesn't have to be. You can do model selection by AIC or BIC:
+
+```{r}
+AIC(mod1, mod2, mod3)
+BIC(mod1, mod2, mod3)
+```
+
+So `mod2` looks pretty sensible:
+
+```{r}
+summary(mod2)
+confint(mod2)
+```
+
+## Mixed models 1
+
+```{r}
+library(lme4)
+```
+
+```{r}
+frames_ss <- frames %>% 
+  group_by(id, age, condition, n_obs) %>%
+  summarise(response = mean(response)) %>%
+  ungroup()
+frames_ss
+```
+
+<!--
+Let's do something boring. Same models:
+
+```{r}
+mod1 <- lmer(formula = response ~ 1 + (1|id), data = frames_ss)
+mod2 <- lmer(formula = response ~ condition + (1|id), data = frames_ss)
+mod3 <- lmer(formula = response ~ condition + age + (1|id), data = frames_ss)
+```
+
+```{r}
+anova(mod1, mod2, mod3)
+```
+-->
+
+
+Sequence of models:
+
+```{r}
+mod1 <- lmer(formula = response ~ 1 + (1|id), data = frames_ss)
+mod2 <- lmer(formula = response ~ condition + (1|id), data = frames_ss)
+mod3 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames_ss)
+mod4 <- lmer(formula = response ~ condition + age + (1 + n_obs|id), data = frames_ss)
+```
+
+Okay let's compare these models in sequence:
+
+```{r}
+anova(mod1, mod2, mod3, mod4)
+```
+
+So `mod3` looks good:
+
+```{r}
+summary(mod3)
+```
+
+Add a column to the data with the fitted values:
+
+```{r}
+frames_ss$modelfit <- predict(mod3)
+```
+
+Plot fitted values against data as a check:
+
+```{r}
+frames_ss %>% 
+  ggplot(aes(x = modelfit, y = response)) + 
+  geom_point() + 
+  facet_grid(condition ~ n_obs) + 
+  geom_abline(intercept = 0, slope = 1)
+```
+
+Let's explore this a bit more substantively:
+
+
+```{r}
+whichids <- sample(unique(frames_ss$id), 50) 
+frames_ss %>%
+  filter(id %in% whichids) %>%
+  ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
+  geom_point(show.legend = FALSE) + 
+  geom_line(show.legend = FALSE, alpha = .3) + 
+  facet_wrap(~ condition)
+```
+  
+
+## Mixed models 2
+
+
+```{r}
+whichids <- sample(unique(frames$id), 20) 
+frames %>%
+  filter(id %in% whichids) %>%
+  ggplot(aes(x = test_item, y = response, shape = condition, colour = factor(n_obs))) +
+  geom_point() + 
+  geom_line(alpha = .3) + 
+  facet_wrap(~ id)
+```
+
+```{r}
+mod1 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames)
+mod2 <- lmer(formula = response ~ condition + (1 + test_item + n_obs|id), data = frames)
+mod3 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
+```
+
+```{r}
+anova(mod1, mod2, mod3)
+```
+
+```{r}
+summary(mod3)
+```
+
+```{r}
+frames$modelfit <- predict(mod3)
+frames$residuals <- residuals(mod3)
+```
+
+```{r} 
+frames %>%
+  filter(id %in% whichids) %>%
+  ggplot(aes(x = test_item, y = response, shape = condition, colour = factor(n_obs))) +
+  geom_point() + 
+  geom_line(aes(y = modelfit), alpha = .3) + 
+  facet_wrap(~ id)
+```
+
+- crude notes: REML fits the fixed effects first, then estimates the random effects; whereas ML does them jointly. General advice is that you have to test fixed effects using the ML fits; to test random effects you can do it either way, but REML is generally preferred (for reasons).
+
+## Generalised linear mixed models
+
+```{r glmer, cache=TRUE}
+frames <- frames %>% mutate(generalisation = (response+.1)/9.2)
+mod <- glmer(
+  formula = generalisation ~ condition + test_item + n_obs + (1 + test_item + n_obs|id), 
+  family = gaussian(link = "logit"), 
+  data = frames)
+```
+
+```{r}
+summary(mod)
+
+frames$modelfit <- predict(mod, type="response")
+frames$residuals <- residuals(mod, type="response")
+
+frames %>%
+  filter(id %in% whichids) %>%
+  ggplot(aes(x = test_item, y = generalisation, shape = condition, colour = factor(n_obs))) +
+  geom_point() + 
+  geom_line(aes(y = modelfit), alpha = .3) + 
+  facet_wrap(~ id)
+```
+
