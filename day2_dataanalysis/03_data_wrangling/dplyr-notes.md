@@ -33,7 +33,7 @@ Step 1 is making sure you have the packages:
 library(here)
 ```
 
-    ## here() starts at /Users/dan/GitHub/chdss2018/day2_dataanalysis/03_data_wrangling
+    ## here() starts at /Users/dan/GitHub/chdss2018/day2_dataanalysis
 
 ``` r
 library(tidyverse)
@@ -66,7 +66,7 @@ data_location <- here("analysis","data","frames_ex2.csv")
 data_location
 ```
 
-    ## [1] "/Users/dan/GitHub/chdss2018/day2_dataanalysis/03_data_wrangling/analysis/data/frames_ex2.csv"
+    ## [1] "/Users/dan/GitHub/chdss2018/day2_dataanalysis/analysis/data/frames_ex2.csv"
 
 Then
 
@@ -259,6 +259,9 @@ frames %>%
     ## 5         5      3.76    2.81   675
     ## 6         6      3.43    2.99   675
     ## 7         7      3.26    3.11   675
+
+-   There are a variety of shortcut functions in `dplyr` (e.g., `tally()` and `count()` make it a bit less tedious to construct frequency tables)
+-   If you ever need to extract a single variable (e.g., the way you would with the `$` operator, you can use the `pull()` function)
 
 Arrange, filter, select, mutate
 -------------------------------
