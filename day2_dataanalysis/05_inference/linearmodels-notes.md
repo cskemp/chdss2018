@@ -25,14 +25,14 @@ library(here)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ──────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ─────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ─────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -262,7 +262,11 @@ In this ANOVA table, what you're looking at is a test of `mod2` against `mod1`, 
 
 ### From hypothesis tests to model selection
 
-Traditionally the way statistics is taught frames this model choice problem as a hypothesis testing problem. It doesn't have to be. You can do model selection by AIC or BIC:
+I have a confession to make. I really dislike using null hypothesis tests the way we did in the previous analysis. Most of the framework for null hypothesis testing comes from work by Jerzy Neyman, and in his framework the goal is to *prespecify* a formal procedure such that you can input a data set, and output a binary decision; and specifically to ensure that this decision procedure controls your Type 1 error rate. This approach to statistics has its place, but it's not actually all that consistent with what we're doing here. Neyman's approach is completely automated: you *must* follow the procedure no matter what your data looks like, or else your Type 1 error isn't controlled. So if explore your data and they turn out to be super weird, you must apply your prespecified decision rule. If you don't not only is the p-value for this test completely meaningless, it also strongly invalidates any other p-values you report, even if you did stick to the procedure in those cases: because it implies that, had the data turned out some other way, you wouldn't have stuck to the procedure, and Neyman's theory only works if you *always* follow the prespecified analysis plan. No excuses, no exceptions.
+
+In real life, this never actually happens. Science doesn't work that way. What I find bizarre, is that while statisticians for the most part have recognised that this presents a problem for Neyman's theory, there is a school of thought within psychology that the problem lies with the *scientist* for not adhering to this stupid statistical theory. Well, nuts to that. I have no particular interest in following Neyman's absurd rules, and my main goal as a scientist is something more akin to Ockham's razor: find the simplest model that provides an good enough account of the data.
+
+In essence, what I've done here is reframed the statistical problem, and changed it from a "hypothesis testing" problem to a "model selection" problem. The tools used for model selection are often somewhat different, and the underlying philosophy is often more aligned with the Ockham's razor idea. Two (very simple, and often flawed) approaches to this are the Akaike information criterion (AIC) and the Bayesian information criterion (BIC), both of which have been around since the 1970s. For our linear models, we can evaluate them using the `AIC()` and `BIC()` functions:
 
 ``` r
 AIC(mod1, mod2, mod3)
@@ -282,7 +286,11 @@ BIC(mod1, mod2, mod3)
     ## mod2  3 826.3411
     ## mod3  4 830.7219
 
-So `mod2` looks pretty sensible:
+Smaller values of AIC and BIC are better, and it's hardly a surprise that `mod2` turns out to be the best one!
+
+### Exploring the model
+
+Overall, `mod2` looks pretty sensible:
 
 ``` r
 summary(mod2)
@@ -314,3 +322,9 @@ confint(mod2)
     ##                       2.5 %     97.5 %
     ## (Intercept)        5.126217  5.6691049
     ## conditionproperty -1.398883 -0.6259535
+
+TODO:
+
+-   the `predict()` function
+-   the `residuals()` function
+-   regression diagnostics using `plot()`
