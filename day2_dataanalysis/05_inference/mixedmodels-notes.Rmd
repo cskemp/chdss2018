@@ -1,5 +1,5 @@
 ---
-title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Inferential statistics in R</h1></div>'
+title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Mixed models in R</h1></div>'
 author: "Danielle Navarro"
 date: "5 December 2018"
 output: github_document
@@ -24,132 +24,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 library(tidyverse)
 frames <- read_csv(here("analysis","data","frames_ex2.csv"))
-```
-
-## What we aren't going to do!
-
-Base R comes with a lot of classical null hypothesis tests built in. The functions for these are all pretty similar. We're not going to talk about them at all, because they're comparatively easy to learn and it's not the best use of our time! But here are some: 
-
-- t.test
-- chisq.test
-- prop.test
-- binom.test
-- wilcox.test
-- cor.test
-- ks.test
-
-
-## Linear models
-
-### Relationship between linear models, ANOVA and t-test
-
-Average within subject so there's just one response per person:
-
-```{r}
-frames_small <- frames %>%
-  group_by(id, age, condition) %>%
-  summarise(
-    response = mean(response)
-    ) %>%
-  ungroup()
-frames_small
-```
-
-Imagining this were our data, we'd typically calculate mean and standard deviation for each condition, across participant. We might also check the number of people in each group:
-
-```{r}
-frames_small %>%
-  group_by(condition) %>%
-  summarise(
-    mean_resp = mean(response), 
-    sd_resp = sd(response),
-    n = n()
-  )
-```
-
-Is this a "significant" difference? Traditional solution is the t-test:
-
-```{r}
-t.test(formula = response ~ condition, data = frames_small, var.equal = TRUE)
-```
-
-Let's try to reframe this a little in term of the actual hypotheses. Normally it'd be H0 and H1, but I'm going to refer to the null hypothesis as model 1 and the alternative as model 2:
-
-```{r}
-mod1 <- lm(formula = response ~ 1, data = frames_small) 
-mod2 <- lm(formula = response ~ condition, data = frames_small)
-```
-
-Now:
-
-```{r}
-anova(mod1, mod2)
-```
-
-- notice the $p$-values are the same
-- the test statistics are related: $t = \sqrt{F}$
-- the residual df in the ANOVA table is the same as the t-test df
-
-Note that this is a slightly different ANOVA table than what you might be expecting to see. A more traditional version looks like this:
-
-```{r}
-anova(lm(response ~ condition, frames_small))
-```
-
-But it's essentially the same.
-
-### Linear modelling
-
-Maybe we want to check to see if there's an effect of age?
-
-```{r}
-frames_small %>% 
-  ggplot(aes(x = age, y = response, colour = condition)) + 
-  geom_smooth(method = "lm") + 
-  geom_point()
-```
-
-Doesn't look very likely, but let's run the model anyway:
-
-```{r}
-summary(lm(
-  formula = response ~ condition + age,
-  data = frames_small
-))
-```
-
-Hm
-
-```{r}
-mod1 <- lm(formula = response ~ 1, data = frames_small) 
-mod2 <- lm(formula = response ~ condition, data = frames_small)
-mod3 <- lm(formula = response ~ condition + age, data = frames_small)
-```
-
-One way to analyse this is:
-
-```{r}
-summary(mod3)
-```
-
-Alternatively, we could do this:
-
-```{r}
-anova(mod1, mod2, mod3)
-```
-
-Traditionally the way statistics is taught frames this model choice problem as a hypothesis testing problem. It doesn't have to be. You can do model selection by AIC or BIC:
-
-```{r}
-AIC(mod1, mod2, mod3)
-BIC(mod1, mod2, mod3)
-```
-
-So `mod2` looks pretty sensible:
-
-```{r}
-summary(mod2)
-confint(mod2)
 ```
 
 ## Mixed models 1
@@ -299,3 +173,15 @@ frames %>%
   facet_wrap(~ id)
 ```
 
+## Where next?
+
+Bayesian approaches
+
+- The `brms` package 
+- The `BayesFactor` package
+- More generally, JAGS and Stan
+
+Other kinds of models
+
+- Decision trees and random forests
+- Structural equations models 
