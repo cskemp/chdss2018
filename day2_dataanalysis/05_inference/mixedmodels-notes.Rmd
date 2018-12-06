@@ -42,35 +42,70 @@ modestframes <- frames %>%
 glimpse(modestframes)
 ```
 
+Let's start by building some possible models. The simplest model we might want to consider is one in which the population mean response is different from zero (i.e., a fixed effect for the intercept), but there is variation in the mean response across individuals (i.e., a random intercept for each participant). The model formula for this is written:
 
-Sequence of models:
+```{r, eval = FALSE}
+response ~ 1 + (1|id)
+```
+
+The first part of this model description `response ~ 1` is something we've seen before under linear models: it's the model that has an intercept but nothing else! Anything in parentheses `(1|id)` is a random effect term. In this case, we have a separate intercept for each person (i.e., each unique `id`). As an alternative, we might want to consider a model that includes fixed effects for the between-subject factor `condition` and the within-subject factor `n_obs`. The formula for that, expressed in `lme4` notation, is 
+
+```{r, eval = FALSE}
+response ~ 1 + condition + n_obs + (1|id)
+```
+
+In real life, we might want to also consider models that only contain one of these two fixed effects, but for simplicity I'm not going to bother with that here. Instead, let's jump straight to estimating these two models:
 
 ```{r modestframeslmer, cache = TRUE}
 modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
-modest2 <- lmer(formula = response ~ condition + (1|id), data = modestframes)
-modest3 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = modestframes)
-modest4 <- lmer(formula = response ~ condition + age + (1 + n_obs|id), data = modestframes)
+modest2 <- lmer(formula = response ~ condition + n_obs + (1|id), data = modestframes)
 ```
 
-Okay let's compare these models in sequence:
+To compare them:
 
 ```{r}
-anova(modest1, modest2, modest3, modest4)
+anova(modest1, modest2)
 ```
 
-So `modest3` looks good:
+One thing that is nice about mixed models is that you can allow much more customisation than this. For instance, is it really all that plausible to think that everyone has a unique "random intercept" term, but is affected by the sample size in precisely the same way? That seems unlikely. To see this, let's plot the data for a random subset of 80 participants:
+
+```{r}
+whichids <- sample(unique(modestframes$id), 80)
+modestframes %>%
+  filter(id %in% whichids) %>%
+  ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
+  geom_point(show.legend = FALSE) + 
+  geom_line(show.legend = FALSE, alpha = .3) + 
+  facet_wrap(~ condition)
+```
+
+To my mind, it beggars belief to think that these lines are all supposed to have the same slope, so we should probably extend the model a bit. Let's suppose that everyone has their own "random slope" term (i.e., everyone has their own regression coefficient for the effect of sample size). That gives us this model:
+
+```{r modestframeslmer2, cache = TRUE}
+modest3 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = modestframes)
+```
+
+Okay let's compare the expanded model to the model that only has a random intercept:
+
+```{r}
+anova(modest2, modest3)
+```
+
+Overall, it looks like this new model is providing a better account of the data, as evidenced by the lower AIC and BIC values. We can get a quantitative summary of how this model performs:
 
 ```{r}
 summary(modest3)
 ```
 
-Add a column to the data with the fitted values:
+Very nice. However, if we're thinking that we might be satisfied with this model, we should now start the process of "model criticism". Let's extract the fitted values ("predictions") and add them to the data frame:
+
 
 ```{r}
 modestframes$modelfit <- predict(modest3)
 ```
 
-Plot fitted values against data as a check:
+One very simple check is to draw a scatterplot showing the fitted (modelled) responses against the raw data. How closely do they resemble one another?
+
 
 ```{r}
 modestframes %>% 
@@ -80,20 +115,29 @@ modestframes %>%
   geom_abline(intercept = 0, slope = 1)
 ```
 
-Let's explore this a bit more substantively:
+They seem reasonably close to one another. There are hints of some systematic misfits near the edges of the response range, but nothing *too* terrible. To take a slightly closer look, let's plot the fitted values for the same 80 individuals we selected randomly earlier on:
 
 ```{r}
-whichids <- sample(unique(modestframes$id), 50) 
 modestframes %>%
   filter(id %in% whichids) %>%
-  ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
+  ggplot(aes(x = n_obs, y = modelfit, colour = factor(id))) +
   geom_point(show.legend = FALSE) + 
   geom_line(show.legend = FALSE, alpha = .3) + 
   facet_wrap(~ condition)
 ```
-  
 
-## Example 2: Mixed models with more complex designs
+Overall this seems like a reasonable, though imperfect, approximation to what appears to be going on in the data. 
+
+TODO:
+- check residuals
+- interpret effects within the model
+- explain the underlying model
+
+- comment on REML vs ML: REML fits the fixed effects first, then estimates the random effects; whereas ML does them jointly. General advice is that you have to test fixed effects using the ML fits; to test random effects you can do it either way, but REML is generally preferred (for reasons).
+
+## Example 2: More complicated designs
+
+At long last, we are at the point where we might be able to construct a sensible model for the *actual* `frames` data. To guide us in this process, let's plot the raw data for 20 randomly chosen subjects. This is pretty important, because each person is providing 21 responses that we expect to be related to one another in a systematic way, but we aren't completely sure what structure we'll find (okay, that's only half true - I did have some suspicions about what to expect, on the basis of substantive theory, but we aren't up to the cognitive modelling section of the summer school yet!) So let's take a look: 
 
 
 ```{r}
@@ -106,24 +150,27 @@ frames %>%
   facet_wrap(~ id)
 ```
 
+There's quite a variety of things there. None of these panels look like random responding, but it's immediately obvious from inspection that there are quite pronounced individual differences. It's not clear how well we're going to do by modelling these as linear functions, but let's give it a try and see how far we can get!
+
+From the last exercise, we can be reasonably sure that there is a fixed effect of `condition` and `n_obs`, as well as random intercepts and slopes as a function of `n_obs`. So our starting point will be the model that came out of that modelling exercise, and -- for the sake of our sanity -- I'm only going to look at one alternative model, namely one that adds a fixed and random effect of `test_item` (mainly because it's kind of a foregone conclusion that these effects exist!)
+
 ```{r linframes, cache = TRUE}
-linframes1 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames)
-linframes2 <- lmer(formula = response ~ condition + (1 + test_item + n_obs|id), data = frames)
-linframes3 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
+linframes1 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = frames)
+linframes2 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
 ```
 
 ```{r}
-anova(linframes1, linframes2, linframes3)
+anova(linframes1, linframes2)
 ```
 
 ```{r}
-summary(linframes3)
+summary(linframes2)
 ```
 
 ```{r}
 linframes <- frames
-linframes$modelfit <- predict(linframes3)
-linframes$residuals <- residuals(linframes3)
+linframes$modelfit <- predict(linframes2)
+linframes$residuals <- residuals(linframes2)
 ```
 
 ```{r} 
@@ -135,7 +182,6 @@ linframes %>%
   facet_wrap(~ id)
 ```
 
-- crude notes: REML fits the fixed effects first, then estimates the random effects; whereas ML does them jointly. General advice is that you have to test fixed effects using the ML fits; to test random effects you can do it either way, but REML is generally preferred (for reasons).
 
 ## Generalised linear mixed models
 

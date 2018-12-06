@@ -25,14 +25,14 @@ library(here)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ──────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ─────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 
     ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
     ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## ── Conflicts ─────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -87,19 +87,29 @@ glimpse(modestframes)
     ## $ n_obs     <int> 2, 6, 12, 2, 6, 12, 2, 6, 12, 2, 6, 12, 2, 6, 12, 2,...
     ## $ response  <dbl> 5.857143, 5.285714, 4.857143, 5.285714, 7.571429, 8....
 
-Sequence of models:
+Let's start by building some possible models. The simplest model we might want to consider is one in which the population mean response is different from zero (i.e., a fixed effect for the intercept), but there is variation in the mean response across individuals (i.e., a random intercept for each participant). The model formula for this is written:
+
+``` r
+response ~ 1 + (1|id)
+```
+
+The first part of this model description `response ~ 1` is something we've seen before under linear models: it's the model that has an intercept but nothing else! Anything in parentheses `(1|id)` is a random effect term. In this case, we have a separate intercept for each person (i.e., each unique `id`). As an alternative, we might want to consider a model that includes fixed effects for the between-subject factor `condition` and the within-subject factor `n_obs`. The formula for that, expressed in `lme4` notation, is
+
+``` r
+response ~ 1 + condition + n_obs + (1|id)
+```
+
+In real life, we might want to also consider models that only contain one of these two fixed effects, but for simplicity I'm not going to bother with that here. Instead, let's jump straight to estimating these two models:
 
 ``` r
 modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
-modest2 <- lmer(formula = response ~ condition + (1|id), data = modestframes)
-modest3 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = modestframes)
-modest4 <- lmer(formula = response ~ condition + age + (1 + n_obs|id), data = modestframes)
+modest2 <- lmer(formula = response ~ condition + n_obs + (1|id), data = modestframes)
 ```
 
-Okay let's compare these models in sequence:
+To compare them:
 
 ``` r
-anova(modest1, modest2, modest3, modest4)
+anova(modest1, modest2)
 ```
 
     ## refitting model(s) with ML (instead of REML)
@@ -107,56 +117,92 @@ anova(modest1, modest2, modest3, modest4)
     ## Data: modestframes
     ## Models:
     ## modest1: response ~ 1 + (1 | id)
-    ## modest2: response ~ condition + (1 | id)
-    ## modest3: response ~ condition + (1 + n_obs | id)
-    ## modest4: response ~ condition + age + (1 + n_obs | id)
-    ##         Df    AIC    BIC  logLik deviance   Chisq Chi Df Pr(>Chisq)    
-    ## modest1  3 2354.9 2368.5 -1174.5   2348.9                              
-    ## modest2  4 2331.5 2349.6 -1161.8   2323.5 25.4013      1  4.656e-07 ***
-    ## modest3  6 2268.4 2295.4 -1128.2   2256.4 67.1647      2  2.602e-15 ***
-    ## modest4  7 2269.7 2301.3 -1127.9   2255.7  0.6391      1     0.4241    
+    ## modest2: response ~ condition + n_obs + (1 | id)
+    ##         Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)    
+    ## modest1  3 2354.9 2368.5 -1174.5   2348.9                             
+    ## modest2  5 2333.5 2356.1 -1161.8   2323.5 25.403      2  3.046e-06 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-So `modest3` looks good:
+One thing that is nice about mixed models is that you can allow much more customisation than this. For instance, is it really all that plausible to think that everyone has a unique "random intercept" term, but is affected by the sample size in precisely the same way? That seems unlikely. To see this, let's plot the data for a random subset of 80 participants:
+
+``` r
+whichids <- sample(unique(modestframes$id), 80)
+modestframes %>%
+  filter(id %in% whichids) %>%
+  ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
+  geom_point(show.legend = FALSE) + 
+  geom_line(show.legend = FALSE, alpha = .3) + 
+  facet_wrap(~ condition)
+```
+
+![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+To my mind, it beggars belief to think that these lines are all supposed to have the same slope, so we should probably extend the model a bit. Let's suppose that everyone has their own "random slope" term (i.e., everyone has their own regression coefficient for the effect of sample size). That gives us this model:
+
+``` r
+modest3 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = modestframes)
+```
+
+Okay let's compare the expanded model to the model that only has a random intercept:
+
+``` r
+anova(modest2, modest3)
+```
+
+    ## refitting model(s) with ML (instead of REML)
+
+    ## Data: modestframes
+    ## Models:
+    ## modest2: response ~ condition + n_obs + (1 | id)
+    ## modest3: response ~ condition + n_obs + (1 + n_obs | id)
+    ##         Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)    
+    ## modest2  5 2333.5 2356.1 -1161.8   2323.5                             
+    ## modest3  7 2270.4 2302.0 -1128.2   2256.4 67.164      2  2.603e-15 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Overall, it looks like this new model is providing a better account of the data, as evidenced by the lower AIC and BIC values. We can get a quantitative summary of how this model performs:
 
 ``` r
 summary(modest3)
 ```
 
     ## Linear mixed model fit by REML ['lmerMod']
-    ## Formula: response ~ condition + (1 + n_obs | id)
+    ## Formula: response ~ condition + n_obs + (1 + n_obs | id)
     ##    Data: modestframes
     ## 
-    ## REML criterion at convergence: 2260.8
+    ## REML criterion at convergence: 2267.9
     ## 
     ## Scaled residuals: 
     ##     Min      1Q  Median      3Q     Max 
-    ## -2.8955 -0.3684 -0.0302  0.3585  3.3912 
+    ## -2.8960 -0.3681 -0.0306  0.3557  3.3860 
     ## 
     ## Random effects:
     ##  Groups   Name        Variance Std.Dev. Corr 
-    ##  id       (Intercept) 1.72433  1.3131        
-    ##           n_obs       0.01672  0.1293   -0.20
+    ##  id       (Intercept) 1.72618  1.3138        
+    ##           n_obs       0.01684  0.1298   -0.21
     ##  Residual             0.55277  0.7435        
     ## Number of obs: 675, groups:  id, 225
     ## 
     ## Fixed effects:
-    ##                   Estimate Std. Error t value
-    ## (Intercept)         5.2273     0.1317   39.70
-    ## conditionproperty  -0.6694     0.1875   -3.57
+    ##                     Estimate Std. Error t value
+    ## (Intercept)        5.2256978  0.1385646  37.713
+    ## conditionproperty -0.6693767  0.1874783  -3.570
+    ## n_obs              0.0004094  0.0111058   0.037
     ## 
     ## Correlation of Fixed Effects:
-    ##             (Intr)
-    ## cndtnprprty -0.702
+    ##             (Intr) cndtnp
+    ## cndtnprprty -0.667       
+    ## n_obs       -0.311  0.000
 
-Add a column to the data with the fitted values:
+Very nice. However, if we're thinking that we might be satisfied with this model, we should now start the process of "model criticism". Let's extract the fitted values ("predictions") and add them to the data frame:
 
 ``` r
 modestframes$modelfit <- predict(modest3)
 ```
 
-Plot fitted values against data as a check:
+One very simple check is to draw a scatterplot showing the fitted (modelled) responses against the raw data. How closely do they resemble one another?
 
 ``` r
 modestframes %>% 
@@ -166,24 +212,31 @@ modestframes %>%
   geom_abline(intercept = 0, slope = 1)
 ```
 
-![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
-Let's explore this a bit more substantively:
+They seem reasonably close to one another. There are hints of some systematic misfits near the edges of the response range, but nothing *too* terrible. To take a slightly closer look, let's plot the fitted values for the same 80 individuals we selected randomly earlier on:
 
 ``` r
-whichids <- sample(unique(modestframes$id), 50) 
 modestframes %>%
   filter(id %in% whichids) %>%
-  ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
+  ggplot(aes(x = n_obs, y = modelfit, colour = factor(id))) +
   geom_point(show.legend = FALSE) + 
   geom_line(show.legend = FALSE, alpha = .3) + 
   facet_wrap(~ condition)
 ```
 
-![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
-Example 2: Mixed models with more complex designs
--------------------------------------------------
+Overall this seems like a reasonable, though imperfect, approximation to what appears to be going on in the data.
+
+TODO: - check residuals - interpret effects within the model - explain the underlying model
+
+-   comment on REML vs ML: REML fits the fixed effects first, then estimates the random effects; whereas ML does them jointly. General advice is that you have to test fixed effects using the ML fits; to test random effects you can do it either way, but REML is generally preferred (for reasons).
+
+Example 2: More complicated designs
+-----------------------------------
+
+At long last, we are at the point where we might be able to construct a sensible model for the *actual* `frames` data. To guide us in this process, let's plot the raw data for 20 randomly chosen subjects. This is pretty important, because each person is providing 21 responses that we expect to be related to one another in a systematic way, but we aren't completely sure what structure we'll find (okay, that's only half true - I did have some suspicions about what to expect, on the basis of substantive theory, but we aren't up to the cognitive modelling section of the summer school yet!) So let's take a look:
 
 ``` r
 whichids <- sample(unique(frames$id), 20) 
@@ -195,34 +248,35 @@ frames %>%
   facet_wrap(~ id)
 ```
 
-![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+There's quite a variety of things there. None of these panels look like random responding, but it's immediately obvious from inspection that there are quite pronounced individual differences. It's not clear how well we're going to do by modelling these as linear functions, but let's give it a try and see how far we can get!
+
+From the last exercise, we can be reasonably sure that there is a fixed effect of `condition` and `n_obs`, as well as random intercepts and slopes as a function of `n_obs`. So our starting point will be the model that came out of that modelling exercise, and -- for the sake of our sanity -- I'm only going to look at one alternative model, namely one that adds a fixed and random effect of `test_item` (mainly because it's kind of a foregone conclusion that these effects exist!)
 
 ``` r
-linframes1 <- lmer(formula = response ~ condition + (1 + n_obs|id), data = frames)
-linframes2 <- lmer(formula = response ~ condition + (1 + test_item + n_obs|id), data = frames)
-linframes3 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
+linframes1 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = frames)
+linframes2 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
 ```
 
 ``` r
-anova(linframes1, linframes2, linframes3)
+anova(linframes1, linframes2)
 ```
 
     ## refitting model(s) with ML (instead of REML)
 
     ## Data: frames
     ## Models:
-    ## linframes1: response ~ condition + (1 + n_obs | id)
-    ## linframes2: response ~ condition + (1 + test_item + n_obs | id)
-    ## linframes3: response ~ condition + test_item + (1 + test_item + n_obs | id)
-    ##            Df   AIC   BIC   logLik deviance   Chisq Chi Df Pr(>Chisq)    
-    ## linframes1  6 23126 23164 -11556.8    23114                              
-    ## linframes2  9 19888 19946  -9934.7    19870 3244.07      3  < 2.2e-16 ***
-    ## linframes3 10 19732 19796  -9855.8    19712  157.92      1  < 2.2e-16 ***
+    ## linframes1: response ~ condition + n_obs + (1 + n_obs | id)
+    ## linframes2: response ~ condition + test_item + (1 + test_item + n_obs | id)
+    ##            Df   AIC   BIC   logLik deviance Chisq Chi Df Pr(>Chisq)    
+    ## linframes1  7 23128 23173 -11556.8    23114                            
+    ## linframes2 10 19732 19796  -9855.8    19712  3402      3  < 2.2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ``` r
-summary(linframes3)
+summary(linframes2)
 ```
 
     ## Linear mixed model fit by REML ['lmerMod']
@@ -256,8 +310,8 @@ summary(linframes3)
 
 ``` r
 linframes <- frames
-linframes$modelfit <- predict(linframes3)
-linframes$residuals <- residuals(linframes3)
+linframes$modelfit <- predict(linframes2)
+linframes$residuals <- residuals(linframes2)
 ```
 
 ``` r
@@ -269,9 +323,7 @@ linframes %>%
   facet_wrap(~ id)
 ```
 
-![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-12-1.png)
-
--   crude notes: REML fits the fixed effects first, then estimates the random effects; whereas ML does them jointly. General advice is that you have to test fixed effects using the ML fits; to test random effects you can do it either way, but REML is generally preferred (for reasons).
+![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 Generalised linear mixed models
 -------------------------------
@@ -347,7 +399,7 @@ glmerframes %>%
   facet_wrap(~ id)
 ```
 
-![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-14-1.png)
+![](mixedmodels-notes_files/figure-markdown_github/unnamed-chunk-18-1.png)
 
 Where next?
 -----------
