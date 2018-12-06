@@ -1,0 +1,38 @@
+model {
+
+  # mean and covariance matrix defining the Gaussian process
+  for(i in 1:ncat) {
+    mean_gp[i] <- m
+    cov_gp[i,i] <- (sigma^2) + (tau^2)
+    for(j in (i+1):ncat) {
+      cov_gp[i,j] <- (tau^2) * exp(-rho * (test[i] - test[j])^2)
+      cov_gp[j,i] <- cov_gp[i,j]
+    }
+  }
+
+  # sample a function from the Gaussian process
+  cov_gp_inv <- inverse(cov_gp)
+  f ~ dmnorm(mean_gp, cov_gp_inv)
+
+  # pass f through logit function to get a function on [0,1]
+  for(i in 1:ncat) {
+    phi[i] <- 1/(1+exp(-f[i]))
+  }
+
+  # to compute the probability that something will be a small bird
+  # given that it has plaxium blood (as per property sampling), we
+  # need the prior probability of each category...
+  base ~ ddirch(alpha)
+
+  # ... then apply Bayes rule to compute the probability of observing
+  # the relevant category under property sampling:
+  denom <- sum(phi * base)
+  for(i in 1:ncat) {
+    pcat[i] <- (phi[i] * base[i]) / denom
+  }
+
+  # sample the positive evidence
+  for(i in 1:nobs) {
+    category[i] ~ dcat(pcat)
+  }
+}

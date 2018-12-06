@@ -1,0 +1,309 @@
+---
+title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Diving into the tdiyverse with dplyr</h1></div>'
+author: "Danielle Navarro"
+date: "4 December 2018"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--
+
+  html_document:
+    includes:
+      in_header: header.html
+    theme: flatly
+    highlight: textmate
+    css: mystyle.css
+
+-->
+
+
+
+## The frames data
+
+The frames data set comes from a simple experiment I ran a little while ago (it’s experiment two from this paper). What we were interested in was understanding how people use statistical information to guide inductive inferences. For example, suppose you observe a sample of “robins” that have “plaxium blood” (whatever that is). How likely is it that “sparrows” will possess plaxium blood? Or “cows”? Does it matter how many robins you have seen? Does it matter whether you specifically selected robins and they turned out to have plaxium blood (category sampling) as opposed to detecting animals with plaxium blood that then turned out to all be robins (property sampling)? In that paper we had a computational model of inductive reasoning that made specific predictions about how the sample size (number of robins) and sampling method (property or category) would inflence people’s judgments.
+
+In this particular experiment we didn’t show people animals (though we have done those too!) we just showed them small “alien rocks” called “sodor spheres”, and asked people to make guesses about new rocks of different sizes:  test_loc values of 1 and 2 were very similar to the items they were shown during training, whereas value 7 was quite dissimilar. The number of training observations ranged from 2 (sample_size = "small") to 12 (sample_size = "large") and was varied within-subject. So everyone saw two observations, made some generalization judgments (response on a scale from 0 to 9), then saw more training observations and so on. Participants were randomly assigned to a "property" sampling condition or to a category sampling one. We also recorded age, gender, and assigned each person a unique id.
+
+The variable key:
+- id: the participant id number
+- gender: male or female
+- age: numeric, in years
+- condition: (between subject). category sampling = people were told observations were selected on the basis of their category membership (e.g., because it's a small bird, or a small rock, or whatever) vs property sampling = people were told observations were selected because of a property they posses (e.g., it has plaxium blood, or a plaxium coating).
+- sample_size: (within subject) small, medium, large - indicating how many observations they'd been shown at this point in the experiment
+- n_obs: (within subject). same as "sample_size", but it's the actual number (2, 6 or 12)
+- test_item: (within subject). what stimulus are they now being shown? numeric: 1 to 7. this is ordinal (or really, quasi-interval) where items 1-2 are essentially identical to observations they'd seen before, and 3-7 become progressively less similar (e.g., bigger bird, bigger rock, whatever...)
+- response: (the outcome, within subject). the rating the person gave (0-9 scale) for "how likely is it that this new stimulus possesses the property (e.g., plaxium blood)?" where 0 = not at all, 9 = certain (or something like that)
+There's quite a bit going on in the data since it's a two within-subject and one between-subject manipulation
+
+## 1. Getting started
+
+Step 1 is making sure you have the packages:
+
+```{r}
+library(here)
+library(tidyverse)
+library(janitor)
+library(skimr)
+```
+
+Step 2 is creating an RMarkdown document that will contain your analyses.
+
+Step 3 is loading the data.
+```{r}
+data_location <- here("analysis","data","frames_ex2.csv")
+data_location
+```
+
+Then
+
+```{r}
+frames <- read_csv(file = data_location)
+frames
+```
+
+It's not a bad idea to take a quick `glimpse()` at the data:
+
+```{r}
+glimpse(frames)
+```
+
+I'm also a fan of the `skim()` function for getting descriptive statistics quickly:
+
+```{r}
+skim(frames)
+```
+
+(Side note: the histograms in skim are text-based and rely on unicode characters. In some cases Windows does weird things and doesn't display them - we'll talk about data vis later)s
+
+practical notes
+
+- irl you'd hae to do a lot of ugly data cleaning to get to this point
+- Mention that data vis is a later section
+
+## 2. Basic operations with dplyr
+
+### Pipes
+
+Data wrangling in R used to be hard. Ever since the `tidyverse` family of packages appeared in a stable form, it's become easy. However, it requires you to have a bit of a shift in mindset:
+
+```{r, eval=FALSE}
+frames %>% skim(.)
+```
+
+The key idea behind `%>%` is a bit of "magic", in which the command is reorganised so that the "thing" on the left (i.e., `frames`) gets inserted into the expression on the right, replacing the `.`). So when you type the command above, it gets reorganised into this...
+
+```{r, eval=FALSE}
+skim(frames)
+```
+
+... and then this reorganised command is evaluated. Why is that useful? Well, imagine we have a series of operations we want to do, where the output of the first operation is fed (or "piped") in as the input to the second, and so on. In piped code, it looks like this:
+```{r, eval=FALSE}
+output <- frames %>% 
+  do_thing1(.) %>%
+  do_thing2(.) %>%
+  do_thing3(.) %>%
+  do_thing4(.)
+```
+
+In traditional code, it would look like this:
+```{r, eval=FALSE}
+output <- do_thing4(
+  do_thing3(
+    do_thing2(
+      do_thing1(
+        frames
+      )
+    )
+  )
+)
+```
+
+which forces you to start reading in the middle and then upwards. It's pretty uncomfortable to read as it is, and it gets *much* worse when each of your `do_thing` functions has additional arguments. So in practice we would write it like this, 
+
+```{r, eval=FALSE}
+a <- do_thing1(frames)
+b <- do_thing2(a)
+c <- do_thing3(b)
+output <- do_thing4(c)
+```
+
+which is a little nicer, but the `a`, `b` and `c` values are just dummy variables that we don't actually want, so then you have to get rid of them. Piped code makes it much more readable, so from now on we'll tend to work with pipes. 
+
+### Group, summarise
+
+Averaging across subjects. 
+
+```{r}
+average_response <- frames %>%
+  group_by(test_item, sample_size, n_obs, condition) %>%
+  summarise(response = mean(response))
+```
+
+Now let's look
+
+```{r}
+average_response
+```
+
+What statistics can we calculate besides the mean?
+
+```{r}
+frames %>% 
+  group_by(test_item) %>%
+  summarise(
+    mean_resp = mean(response),
+    sd_resp = sd(response),
+    count = n()
+  )
+```
+
+- There are a variety of shortcut functions in `dplyr` (e.g., `tally()` and `count()` make it a bit less tedious to construct frequency tables)
+- If you ever need to extract a single variable (e.g., the way you would with the `$` operator, you can use the `pull()` function)
+
+## Arrange, filter, select, mutate
+
+What if we want to include only some cases (e.g., the small sample size)? The `filter()` command:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small")
+```
+
+Hm, this is nice, but I'd prefer to have it sorted by condition rather than by test item. The `arrange()` function will do that:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition)
+```
+
+Okay, but do we really need the sample size variables? Maybe I only want to `select()` the other three variables:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition) %>%
+  select(test_item, condition, response)
+```
+
+Wait why doesn't that work? The `dplyr` package is pretty picky about grouping variables, and won't let you drop them! Remember, to construct the `average_response` data set, we grouped the original `frames` data, and when we used `group_by()` to do this, R has retained some information about this grouping (hidden in an invisible attribute). So if you do want to get rid of this, you'll need to `ungroup()` before you `select()`. So now this version does what we're expecting:
+
+```{r}
+average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition) %>%
+  ungroup() %>%
+  select(test_item, condition, response)
+```
+
+At this point, our "chain" of piped operations is getting quite long, and maybe we'd like to save the output to a new variable!
+
+```{r}
+average_response_small <- average_response %>%
+  filter(sample_size == "small") %>%
+  arrange(condition) %>%
+  ungroup() %>%
+  select(test_item, condition, response)
+```
+
+
+The response data are on a 0 to 9 scale, but maybe it makes more sense to rescale so it to a "generalisation" value that ranges from 0 to 1. That's a simple transformation (divide by 9), but how do we create a new variable inside the data frame? Enter `mutate()`
+
+```{r}
+average_response_small <- average_response_small %>%
+  mutate(generalisation = response/9)
+```
+
+Now:
+
+```{r}
+average_response_small
+```
+
+## Gather and spread
+
+What if we want to have the two conditions as separate variables? 
+
+```{r}
+average_response_small %>%
+  spread(key = condition, value = generalisation)
+```
+
+Why did that not work? Remember we still have `response` in the data, and there's a unique value of response for everything. Gr. Okay, so let's select out that one before spreading...
+
+```{r}
+wide_avrs <- average_response_small %>%
+  select(-response) %>%
+  spread(key = condition, value = generalisation)
+
+wide_avrs
+```
+
+Want to `gather()` it back into long form?
+
+```{r}
+wide_avrs %>% gather(key = "condition", value = "generalisation", category, property)
+```
+
+Exercise. Try spreading and gathering by test item rather than condition
+
+## Getting fancier
+
+```{r}
+frames %>% 
+  group_by(test_item, sample_size, condition) %>%
+  summarise(response = mean(response)) %>%
+  spread(key = sample_size, value = response)
+```
+
+Hm, those are ordered wrong. Why? Well, they're alphabetical. 
+
+```{r}
+frames %>% 
+  group_by(test_item, sample_size, condition) %>%
+  summarise(response = mean(response)) %>%
+  ungroup() %>%
+  mutate(
+    sample_size = sample_size %>%
+      as_factor() %>%
+      fct_relevel("small","medium","large")
+  ) %>%
+  spread(key = sample_size, value = response)
+```
+
+What if we want to spread by two variables at once!!!
+
+
+```{r}
+new_data <- frames %>% 
+  group_by(test_item, sample_size, condition) %>%
+  summarise(response = mean(response)) %>%
+  unite(col = "cond_ss", condition, sample_size) 
+```
+
+... then you would `spread()` using `cond_ss` as the `key`. 
+
+Which brings us to a question. What if you get a data set where you have a variable like `cond_ss` that needs to be separated into two? Well...
+
+```{r}
+new_data %>% separate(col = cond_ss, into = c("condition", "sample_size"))
+```
+
+
+## Other notes?
+
+- The data that we were given has nice variable names. No spaces, no fancy characters, etc. It's a pain to rename variables one at a time. Check out the `janitor` package (and the `clean_names()` function specifically)
+- If you need to do text manipulation, the `stringr` package is your friend
+- If you need to parse dates (pray you don't because they suck), the `lubridate` package is the least painful way known
+- Later on, if you find yourself writing lots of loops in your R code an they're running really slowly, the `purrr` package will be your friend, but it's not easy to learn so give it a bit of time. 
+- Say something about merging data with the various join functions!
+- The RYouWithMe series on the RLadies-Sydney website covers similar territory to this (with different data) and has nice screencasts
+- Add links to relevant sections in PSYR.
+
+
+
+

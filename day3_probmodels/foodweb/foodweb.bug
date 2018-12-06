@@ -1,0 +1,13 @@
+model
+    {
+       kelp ~ dcat(p.kelp[1:2])
+       herring ~ dcat(p.herring[kelp,1:2])
+       dolphin ~ dcat(p.dolphin[herring,1:2])
+       tuna ~ dcat(p.tuna[herring,1:2])
+       sandshark ~ dcat(p.sandshark[herring,1:2])
+       mako ~ dcat(p.mako[dolphin,tuna,1:2])
+       human ~ dcat(p.human[mako,1:2])
+}
+
+
+
