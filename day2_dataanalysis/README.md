@@ -1,28 +1,17 @@
 # Day 2: Data analysis
 
-Assumed knowledge:
+Background:
 
-- Basic R programming from Day 0
-- Some experience with online experiments etc from Day 1
+- The content assumes that you already understand basic R programming, as per Day 0 (the R bootcamp). It assumes no knowledge of git, R markdown or statistical modelling
+- The content is mostly independent of Day 1, but the experimental framework for the data set we'll rely on is outlined in Day so it will help to have completed Day 1. 
+- The content does assume that you have a solid grasp of orthodox statistics, at least to the extent that they are taught in undergraduate psychology classes
 
+The modules for Day 2 consist of:
 
+- [Working with git and GitHub](git-notes.md)
+- [Working with R markdown and R projects](rproj-notes.md)_
+- [Data wrangling in tidyverse (readr, tibble, dplyr, tidyr)](dplyr-notes.md)
+- [Data visualisation in tidyverse (ggplot2)](ggplot-notes.md)
+- [Linear models in R](linearmodels-notes.md)
+- [Mixed models in in R](mixedmodels-notes.md) 
 
-## Structured workflow
-
-- Part 1: Working with git and GitHub
-- Part 2: Working with R markdown and R projects
-
-
-
-## Working with data
-
-- Part 3: Data wrangling in tidyverse (readr, tibble, dplyr, tidyr)
-- Part 4: Data visualisation in tidyverse (ggplot2)
-
-
-
-## Inferential statistics in R
-
-- Quick coverage of classical tests. lm, aov, t.test, cor.test, chi.square
-- Slightly longer coverage of Bayes factor package?
-- JAGS, brms??????
