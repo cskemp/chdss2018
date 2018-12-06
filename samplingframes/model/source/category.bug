@@ -1,0 +1,27 @@
+model {
+
+  # mean and covariance matrix defining the Gaussian process
+  for(i in 1:ncat) {
+    mean_gp[i] <- m
+    cov_gp[i,i] <- (sigma^2) + (tau^2)
+    for(j in (i+1):ncat) {
+      cov_gp[i,j] <- (tau^2) * exp(-rho * (test[i] - test[j])^2)
+      cov_gp[j,i] <- cov_gp[i,j]
+    }
+  }
+
+  # sample a function from the Gaussian process
+  cov_gp_inv <- inverse(cov_gp)
+  f ~ dmnorm(mean_gp, cov_gp_inv)
+
+  # pass f through logit function to get a function on [0,1]
+  for(i in 1:ncat) {
+    phi[i] <- 1/(1+exp(-f[i]))
+  }
+
+  # category sampling: the N observations are all sampled with the
+  # constraint that they come from the target category (i.e. test[1])
+  for(i in 1:nobs) {
+    plaxium[i] ~ dbern(phi[category[i]])
+  }
+}
