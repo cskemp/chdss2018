@@ -39,16 +39,14 @@ library(here)
 library(tidyverse)
 ```
 
-    ## ── Attaching packages ─────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+    ## ── Attaching packages ────────────────────────────── tidyverse 1.2.1 ──
 
-    ## ✔ ggplot2 3.0.0     ✔ purrr   0.2.5
-    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.6
+    ## ✔ ggplot2 3.1.0     ✔ purrr   0.2.5
+    ## ✔ tibble  1.4.2     ✔ dplyr   0.7.8
     ## ✔ tidyr   0.8.1     ✔ stringr 1.3.1
     ## ✔ readr   1.1.1     ✔ forcats 0.3.0
 
-    ## Warning: package 'dplyr' was built under R version 3.5.1
-
-    ## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ── Conflicts ───────────────────────────────── tidyverse_conflicts() ──
     ## ✖ dplyr::filter() masks stats::filter()
     ## ✖ dplyr::lag()    masks stats::lag()
 
@@ -132,13 +130,13 @@ skim(frames)
     ##  n obs: 4725 
     ##  n variables: 8 
     ## 
-    ## ── Variable type:character ─────────────────────────────────────────────────────────────────────────────
+    ## ── Variable type:character ────────────────────────────────────────────
     ##     variable missing complete    n min max empty n_unique
     ##    condition       0     4725 4725   8   8     0        2
     ##       gender       0     4725 4725   4   6     0        2
     ##  sample_size       0     4725 4725   5   6     0        3
     ## 
-    ## ── Variable type:integer ───────────────────────────────────────────────────────────────────────────────
+    ## ── Variable type:integer ──────────────────────────────────────────────
     ##   variable missing complete    n   mean    sd p0 p25 p50 p75 p100     hist
     ##        age       0     4725 4725  34.92 11.63 20  27  32  40   84 ▇▇▃▂▁▁▁▁
     ##         id       0     4725 4725 113    64.96  1  57 113 169  225 ▇▇▇▇▇▇▇▇
