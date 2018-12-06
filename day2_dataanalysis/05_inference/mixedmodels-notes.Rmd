@@ -159,19 +159,29 @@ linframes1 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data
 linframes2 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
 ```
 
+As before, we can call the `anova()` function to run some simple model comparisons:
+
 ```{r}
 anova(linframes1, linframes2)
 ```
 
+I personally prefer to rely on BIC over $p$-values or AIC, but realistically none of them are ideal, and in any case the differences in model performance are so extreme it doesn't matter what you use. They all give the same answer. So now let's take a closer look at the model performance:
+
 ```{r}
 summary(linframes2)
 ```
+
+The correlation term here deserves some explanation [TODO]
+
+Add the model fits and residuals
 
 ```{r}
 linframes <- frames
 linframes$modelfit <- predict(linframes2)
 linframes$residuals <- residuals(linframes2)
 ```
+
+Now that we have a model, let's see how well it holds up under a good old-fashioned eyeball test. Here are the model predictions (lines) plotted against the raw ata for the same 20 participants:
 
 ```{r} 
 linframes %>%
@@ -181,6 +191,8 @@ linframes %>%
   geom_line(aes(y = modelfit), alpha = .3) + 
   facet_wrap(~ id)
 ```
+
+It's okay, I guess, but a little less than ideal. There are some clear nonlinearities in the data. At the individual-subject level, some responses look linear, others look S-shaped, and others look curvilinear. It would be nice to capture this in the model.
 
 
 ## Generalised linear mixed models
@@ -196,9 +208,25 @@ logitmod <- glmer(
   data = glmerframes)
 ```
 
-```{r}
-summary(logitmod)
+For comparison, lets fit this model with a linear link function (i.e., same model as last time, but using the rescaled data)
 
+```{r lmer, cache=TRUE}
+linearmod <- lmer(
+  formula = generalisation ~ condition + test_item + n_obs + (1 + test_item + n_obs|id), 
+  data = glmerframes)
+```
+
+
+Comparing models?
+
+```{r}
+anova(linearmod, logitmod)
+```
+
+Again, all three criteria (AIC, BIC, $p$-values if you absolutely must) lead to the same conclusion, namely that the nonlinear model provides the better account of people's responses. As usual, we should take a good look at what the model is actually doing before we accept anything:
+
+
+```{r}
 glmerframes$modelfit <- predict(logitmod, type="response")
 glmerframes$residuals <- residuals(logitmod, type="response")
 
@@ -209,6 +237,85 @@ glmerframes %>%
   geom_line(aes(y = modelfit), alpha = .3) + 
   facet_wrap(~ id)
 ```
+
+Okay, at long last I'm "happy". It's not a perfect model but it's good enough that we can use it to test for "effects":
+
+```{r}
+summary(logitmod)
+```
+
+It's taken us a while, but I think we're now at the stage where we could reasonably claim that there are genuine effects of test item and sampling condition. It's less clear whether there is an effect of sample size. 
+
+### Data visualisation... it matters!
+
+Remember this?
+
+```{r}
+frames %>%
+  group_by(condition, sample_size, test_item) %>%
+  summarise(response = mean(response)) %>%
+  ggplot(aes(x = test_item, y = response, colour = condition)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~sample_size)
+```
+
+Why am I fitting this model without interaction terms? Just eyeballing the mean response it's really clear that there is a three-way interaction here. The difference between property sampling and category sampling increases as a function of sample size, but *only* for the distant test items.
+
+The answer:
+
+```{r glmernasty, cache=TRUE}
+kitchensink <- glmer(
+  formula = generalisation ~ condition * test_item * n_obs + (1 + test_item * n_obs|id), 
+  family = gaussian(link = "logit"), 
+  data = glmerframes)
+```
+
+Yeah, this is not a happy place to be. Once your model gets this complicated, be prepared for bad things to happen. Nevertheless, let's take a quick check and see if this model is better:
+
+```{r}
+anova(logitmod, kitchensink)
+```
+
+Yep. Even though we're having horrible problems getting the bloody thing to converge (so our estimates are probably all a bit wrong), it's *still* providing a vastly superior fit to the last one. Well, let's take a look...
+
+```{r, fig.height=20, fig.width=10}
+glmerframes2 <- glmerframes
+glmerframes2$modelfit <- predict(kitchensink, type="response")
+glmerframes2$residuals <- residuals(kitchensink, type="response")
+
+glmerframes2 %>%
+  #filter(id %in% whichids) %>%
+  ggplot(aes(x = test_item, y = generalisation, shape = condition, colour = factor(n_obs))) +
+  geom_point() + 
+  geom_line(aes(y = modelfit), alpha = .3) + 
+  facet_wrap(~ id)
+```
+
+Yeah, that's actually better. The eyeball test again agrees with AIC, BIC and even the humble $p$-value. This model does a much better job of fitting the data in the experiment. 
+
+So now let's use the `summary()` function to take a look at the model coefficients and the "standard" tests of significance:
+
+```{r}
+summary(kitchensink)
+```
+
+Uh huh. What the hell does any of this mean??!? I mean, it's the same output we've seen at every previous step in the process, but now it just looks like an arbitrary collection of asterisks and numbers. 
+
+To my mind, the only part of this output that matters is this one line, highlighting the fact that yes, once you put together a proper model that accounts for individual differences and can match the structure of the data reasonably well, there is indeed a three way interaction. Everything matters (except totally irrelevant stuff like age and the colour of the wallpaper) and everything interacts with everything else:
+
+```
+## conditionproperty:test_item:n_obs -0.07719    0.02095  -3.685 0.000229 ***
+```
+
+If you want to get more out of the data than this, statistics won't help you any more. You're going to have to try doing some psychology, I'm afraid...
+
+
+## THE BIGGEST LESSON
+
+If I were exploring the data without the guide of substantive theory and with no proper cognitive model to tell me where to look next, I would be *very* wary of going any further. Blindly trying to make sense of three-way interaction effects  is a terrible idea, and you'll end up chasing shadows. Nothing -- and I repeat, **NOTHING** -- in what we have done so far, is "theory". Yes, what we have here is a "model" in the sense that statisticians refer to a model, but it is *not* a cognitive model in the sense that any psychologist would care about. It is not constrained by any notion of how people are solving the reasoning problem. There is no substance here: it is purely data analysis. One of the big traps that psychologists have fallen for, time and time again over the last century, is believing that statistical models can provide a substitute for theory. Call it the *psychometric fallacy* if you will. 
+
+Tomorrow, Charles will talk more about what actually does constitute theory!
 
 ## Where next?
 
