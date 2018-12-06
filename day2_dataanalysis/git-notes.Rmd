@@ -495,4 +495,5 @@ Once you're comfortable, there's more cool things you can do. Suppose you want t
 - [Happy Git and GitHub for the useR](http://happygitwithr.com/) by Jenny Bryan and Jim Hester
 - [How to make your first pull request](https://github.com/thisisnic/first-contributions) by Nic Crane
 - [Git for Scientists](https://github.com/MilesMcBain/git_4_sci) by Miles McBain.
+- [More stuff](https://lab.github.com/courses) on the GitHub web page
 
