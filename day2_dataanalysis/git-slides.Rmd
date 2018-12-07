@@ -27,8 +27,8 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
+<!-- *********** NEW SLIDE ************** -->
 ---
-
 class: split-two bg-main1
 
 .column.bg-main1[.content.vmiddle.center[
@@ -55,6 +55,37 @@ class: split-two bg-main1
 ]]
 
 
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Structure of this section
+
+<br>
+
+.pull.left[.pad1[
+
+### This is interactive: don't just listen, code!
+### Tutorial located at XXXX
+### Slide structure mirrors the tutorial
+### Goal is to build a repo that we'll use later
+
+]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+<img src="images/git_2x.png", width="70%">
+
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -64,44 +95,208 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
+
+
+<!-- *********** NEW SLIDE ************** -->
 ---
+class: split-two bg-main1
 
-class: bg-main1 center middle hide-slide-number
+.column.bg-main1[.content.vmiddle.center[
 
-.reveal-text.bg-main2[.pad1[
-.font4[Getting started]
-]]
-
-
----
-
-class: bg-main1
-
-.pad1[
-.font3[Creating an empty repository]
-]
+# How to install
 
 <br>
 
 .pull.left[.pad1[
 
-From the Windows command prompt:
+### Windows users:
+### https://gitforwindows.org/
+<br>
+### Mac users:
+### Install Xcode from App Store (warning: 6Gb)
 
-```{}
-> git init
-Initialized empty Git repository in C:/Users/Dan/GitHub/myproject/.git/
-```
 
-From Mac OS terminal or Linux shell:
+]]
 
-```{}
-> git init
-Initialized empty Git repository in /home/danielle/myproject/.git/
-```
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+<img src="images/gfw.png", width="70%">
 
 ]]
 
 
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Configuring git]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1
+
+.pad2[
+.font3[Configuring git]
+.pull.left[.font2[
+- Git (& later, GitHub) needs to know your name and email
+- Choose wisely! GitHub has educational discounts
+- From the Windows command prompt / Mac terminal:
+]
+```{}
+git config --global user.name 'Danielle Navarro'
+git config --global user.email 'd.navarro@unsw.edu.au'
+```
+]]
+--
+.pad2[.pull.left[.font2[
+- Other configurable things:
+]
+```{}
+git config --list
+```
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Get a GitHub account]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Get a GitHub account
+
+<br>
+
+.pull.left[.pad1[
+
+### https://github.com/
+### GitHub will host repositories for you
+### Allows proper version control 
+### Ideal for collaborative coding
+
+]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+<img src="images/github.png", width="70%">
+
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Creating a repository on GitHub]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# How to create a repo
+
+<br>
+
+.pull.left[.pad1[
+
+### Select new repository (The + in the top right)
+### Fill out details (See adjacent panel)
+### Celebrate! (See notes for extras)
+
+]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+<img src="images/new_repository3.jpg", width="70%">
+
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Clone to your local machine]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.row.bg-main1[.content.vmiddle.center[
+
+# At the Windows Command Prompt
+
+.pull.left[.pad2[
+```{}
+cd C:\Users\Dan\GitHub
+git clone https://github.com/djnavarro/summerschool.git
+```
+]]
+]]
+
+--
+
+.row.bg-main3[.content.vmiddle.center[
+
+# At the Mac OS Terminal
+
+.pull.left[.pad2[
+```{}
+cd /Users/Dan/GitHub
+git clone https://github.com/djnavarro/summerschool.git
+```
+
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle
+
+# The result is a local copy of the repository 
+<br>
+<img src="images/clonedrepo.jpg", width="70%">
+<br>
+
+
+
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1
@@ -134,6 +329,7 @@ Untracked files:
 ]]
 
 
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1
@@ -166,6 +362,7 @@ Changes to be committed:
 ]]
 
 
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1
@@ -190,6 +387,7 @@ class: bg-main1
 ]]
 
 
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -198,14 +396,8 @@ class: bg-main1 center middle hide-slide-number
 .font4[Making a commit]
 ]]
 
----
 
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Creating a repository on GitHub]
-]]
-
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -215,6 +407,7 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -223,6 +416,8 @@ class: bg-main1 center middle hide-slide-number
 .font4[Cloning a repository from GitHub]
 ]]
 
+
+<!-- *********** NEW SLIDE ************** -->
 ---
 
 class: bg-main1 center middle hide-slide-number

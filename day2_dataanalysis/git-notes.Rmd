@@ -46,7 +46,7 @@ git version 2.15.2 (Apple Git 101.1)
 As long as you're getting a message that tells you that git exists then you're good to go.
 
 
-## Introducing yourself to git
+## Configuring git
 
 In a moment we'll get you to sign up for an account with GitHub, but while we're here at the command line, we might as well make a few settings. You can tell git who you are by using the `git config` command. For me, that means I do this:
 
