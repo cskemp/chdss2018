@@ -1,3 +1,4 @@
+
 model
     {
        kelp ~ dcat(p.kelp[1:2])
