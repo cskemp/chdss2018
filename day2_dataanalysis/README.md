@@ -1,12 +1,14 @@
-# Day 2: Data analysis
+# Day 2: Data analysis with R
 
-Background:
+The goal in Day 2 is to cover a variety of topics relevant to data analysis with R. The coverage is somewhat eclectic: there are sections that discuss tools that will help you with your workflow (e.g., git, R Markdown, etc), sections that discuss how to manipulate and visualise data (e.g., tidyverse), and a section that discusses statistical modelling in R (e.g., linear models, mixed models). Given the breadth of coverage, we won't go into much detail on any topic. You should think of each section as an initial introduction to something that is itself a much larger topic.
 
-- The content assumes that you already understand basic R programming, as per Day 0 (the R bootcamp). It assumes no knowledge of git, R markdown or statistical modelling
-- The content is mostly independent of Day 1, but the experimental framework for the data set we'll rely on is outlined in Day so it will help to have completed Day 1. 
-- The content does assume that you have a solid grasp of orthodox statistics, at least to the extent that they are taught in undergraduate psychology classes
+Assumed knowledge:
 
-The modules for Day 2 consist of:
+- Basic R programming, as per Day 0.
+- Mostly independent of Day 1.
+- Solid grasp of undergradual level statisic
+
+Within each content section, I've linked to a written tutorial, the HTML version of my slides, and (TODO) a set of do-it-yourself exercises.
 
 - Working with git and GitHub ([tutorial](git-notes.md), [slides](git-slides.html))
 - Working with R markdown and R projects ([tutorial](rproj-notes.md), [slides](rproj-slides.html))
