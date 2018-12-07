@@ -1,23 +1,28 @@
----
-title: "Data wrangling with dplyr"
-subtitle: "This is a funny subtitle too"
-author: "<br><br>Danielle Navarro &nbsp;`r anicon::faa('twitter', animate='float', rtext='@djnavarro')`"
-date: "<br><br>2018-12-11, Updated: `r Sys.Date()`"
-output:
-  xaringan::moon_reader:
-    lib_dir: libs
-    css: ["kunoichi", "ninjutsu" , "assets/ninpo.css"]
-    self_contained: false
-    nature:
-      ratio: "16:9"
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Data wrangling with dplyr</title>
+    <meta charset="utf-8">
+    <meta name="author" content="  Danielle Navarro  <span>&lt;i class="fab  fa-twitter faa-float animated "&gt;&lt;/i&gt;@djnavarro</span>" />
+    <link href="libs/remark-css/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="assets/ninpo.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data wrangling with dplyr
+## This is a funny subtitle too
+### <br><br>Danielle Navarro  <span>&lt;i class="fab  fa-twitter faa-float animated "&gt;&lt;/i&gt;@djnavarro</span>
+### <br><br>2018-12-11, Updated: 2018-12-07
+
 ---
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-```
+
+
 
 
 class: bg-main1 center middle hide-slide-number
@@ -27,7 +32,7 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -35,7 +40,7 @@ class: split-two bg-main1
 
 # Data wrangling
 
-<br>
+&lt;br&gt;
 
 .pull.left[.pad1[
 
@@ -50,7 +55,7 @@ class: split-two bg-main1
 --
 .column.bg-main3[.content.vmiddle.center[
 
-<img src="images/horst_dplyr.png", width="70%">
+&lt;img src="images/horst_dplyr.png", width="70%"&gt;
 
 [@allison_horst](https://twitter.com/allison_horst)
 
@@ -58,7 +63,7 @@ class: split-two bg-main1
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -66,7 +71,7 @@ class: split-two bg-main1
 
 # Structure of this section
 
-<br>
+&lt;br&gt;
 
 .pull.left[.pad1[
 
@@ -81,7 +86,7 @@ class: split-two bg-main1
 
 .column.bg-main3[.content.vmiddle.center[
 
-<img src="images/horst_dplyr.png", width="70%">
+&lt;img src="images/horst_dplyr.png", width="70%"&gt;
 
 [@allison_horst](https://twitter.com/allison_horst)
 
@@ -90,7 +95,7 @@ class: split-two bg-main1
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -101,81 +106,81 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Property sampling: the robot only detects plaxium spheres
-<br>
-<img src="images/data10_property.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/data10_property.jpg", width="70%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Category sampling: the robot only tests small spheres
-<br>
-<img src="images/data10_category.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/data10_category.jpg", width="70%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Small sample size: Elicit judgments after two observations
-<br>
-<img src="images/data2_property.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/data2_property.jpg", width="70%"&gt;
+&lt;br&gt;
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Medium sample size: Elicit judgments after six observations
-<br>
-<img src="images/data6_property.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/data6_property.jpg", width="70%"&gt;
+&lt;br&gt;
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Large sample size: Elicit judgments after twelve observations
-<br>
-<img src="images/data12_property.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/data12_property.jpg", width="70%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Seven test items that vary in size: Smallest...
-<br>
-<img src="images/test2.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/test2.jpg", width="70%"&gt;
+&lt;br&gt;
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Seven test items that vary in size: Largest...
-<br>
-<img src="images/test8.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/test8.jpg", width="70%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-60 bg-main1
 
@@ -183,13 +188,13 @@ class: split-60 bg-main1
 
 # If you don't have the data set...
 
-<br>
+&lt;br&gt;
 
 .pull.left[.pad1[
 
 ### Download it from here:
 ### http://compcogscisydney.org/psyr/data/frames_ex2.csv
-<br>
+&lt;br&gt;
 ### Save it to here:
 ### [your_project]/analysis/data/frames_ex2.csv
 
@@ -205,7 +210,7 @@ class: split-60 bg-main1
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -215,7 +220,7 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -226,7 +231,8 @@ class: split-two bg-main1
 
 .pull.left[.pad1[
 
-```{r, eval=FALSE}
+
+```r
 install.packages("tidyverse")
 install.packages("skimr")
 ```
@@ -243,7 +249,7 @@ install.packages("skimr")
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -254,7 +260,7 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1
@@ -262,7 +268,7 @@ class: bg-main1
 .pad2[
 .font3[Configuring git]
 .pull.left[.font2[
-- Git (& later, GitHub) needs to know your name and email
+- Git (&amp; later, GitHub) needs to know your name and email
 - Choose wisely! GitHub has educational discounts
 - From the Windows command prompt / Mac terminal:
 ]
@@ -281,7 +287,7 @@ git config --list
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -292,7 +298,7 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -300,7 +306,7 @@ class: split-two bg-main1
 
 # Get a GitHub account
 
-<br>
+&lt;br&gt;
 
 .pull.left[.pad1[
 
@@ -315,12 +321,12 @@ class: split-two bg-main1
 
 .column.bg-main3[.content.vmiddle.center[
 
-<img src="images/github.png", width="70%">
+&lt;img src="images/github.png", width="70%"&gt;
 
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -331,7 +337,7 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -339,7 +345,7 @@ class: split-two bg-main1
 
 # How to create a repo
 
-<br>
+&lt;br&gt;
 
 .pull.left[.pad1[
 
@@ -353,12 +359,12 @@ class: split-two bg-main1
 
 .column.bg-main3[.content.vmiddle.center[
 
-<img src="images/new_repository3.jpg", width="70%">
+&lt;img src="images/new_repository3.jpg", width="70%"&gt;
 
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -368,7 +374,7 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -400,18 +406,18 @@ git clone https://github.com/djnavarro/summerschool.git
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # The result is a local copy of the repository 
-<br>
-<img src="images/clonedrepo.jpg", width="70%">
-<br>
+&lt;br&gt;
+&lt;img src="images/clonedrepo.jpg", width="70%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -423,7 +429,7 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-two bg-main1
 
@@ -451,7 +457,7 @@ nothing to commit, working tree clean
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 class: split-70 bg-main1
 
@@ -478,7 +484,7 @@ origin  https://github.com/djnavarro/summerschool.git (push)
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -488,30 +494,30 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # Let's suppose we want to edit the README.md file 
 
-<br>
-<img src="images/readme_rstudio.jpg", width="50%">
-<br>
+&lt;br&gt;
+&lt;img src="images/readme_rstudio.jpg", width="50%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
-<br>
-<img src="images/readme_rstudio2.jpg", width="90%">
-<br>
+&lt;br&gt;
+&lt;img src="images/readme_rstudio2.jpg", width="90%"&gt;
+&lt;br&gt;
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -523,7 +529,7 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: split-two bg-main1
@@ -551,7 +557,7 @@ git commit -m "YOUR MESSAGE HERE"
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -562,7 +568,7 @@ class: bg-main1 center middle hide-slide-number
 
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: split-two bg-main1
@@ -584,12 +590,12 @@ git push -u origin master
 
 .column.bg-main3[.content.vmiddle.center[
 
-<img src="images/updated_repository.jpg" width="90%">
+&lt;img src="images/updated_repository.jpg" width="90%"&gt;
 
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle hide-slide-number
@@ -599,19 +605,19 @@ class: bg-main1 center middle hide-slide-number
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: bg-main1 center middle
 
 # To add a collaborator on GitHub
 
-<br>
-<img src="images/addcontributor.jpg", width="90%">
-<br>
+&lt;br&gt;
+&lt;img src="images/addcontributor.jpg", width="90%"&gt;
+&lt;br&gt;
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: split-two bg-main1
@@ -640,7 +646,7 @@ git pull
 ]]
 
 
-<!-- *********** NEW SLIDE ************** -->
+&lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
 
 class: split-two bg-main1
@@ -660,18 +666,65 @@ class: split-two bg-main1
 
 # But beware... of merge conflicts 
 
-<img src="https://media.giphy.com/media/10Iu43S5QuBTMc/giphy.gif" width = "90%">
+&lt;img src="https://media.giphy.com/media/10Iu43S5QuBTMc/giphy.gif" width = "90%"&gt;
 
 ]]
 
 
 
 
-<!-- DONE -->
+&lt;!-- DONE --&gt;
 ---
 
 class: bg-main1 middle center
 
 ## thank u, next
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
 
-
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
