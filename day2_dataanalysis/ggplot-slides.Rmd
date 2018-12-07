@@ -1,0 +1,766 @@
+---
+title: "Data visualisation with ggplot2"
+subtitle: "This is a funny subtitle too"
+author: "<br><br>Danielle Navarro &nbsp;`r anicon::faa('twitter', animate='float', rtext='@djnavarro')`"
+date: "<br><br>2018-12-11, Updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["kunoichi", "ninjutsu" , "assets/ninpo.css"]
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE, message = FALSE}
+options(htmltools.dir.version = FALSE)
+library(here)
+library(tidyverse)
+frames <- read_csv(here("analysis","data","frames_ex2.csv"))
+```
+
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Data visualisation]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Data visualisation
+
+<br>
+
+.pull.left[.pad1[
+
+### .orange[**What?**] 
+### .orange[**Why?**] 
+### .orange[**How?**] 
+
+]]
+
+]]
+
+--
+.column.bg-main3[.content.vmiddle.center[
+
+<img src="images/horst_ggplot.png", width="70%">
+
+[@allison_horst](https://twitter.com/allison_horst)
+
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small <- frames %>%
+  group_by(
+    id, gender, age, condition
+  ) %>%
+  summarise(
+    response = mean(response)
+  ) %>%
+  ungroup()
+
+frames_small
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small <- frames %>%
+  group_by(
+    id, gender, age, condition
+  ) %>%
+  summarise(
+    response = mean(response)
+  ) %>%
+  ungroup()
+
+frames_small
+```
+]]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Example 1: Histograms]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot()
+```
+]]
+]]
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(aes(x = age))
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(aes(x = age))
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(aes(x = age)) +
+  geom_histogram()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(aes(x = age)) +
+  geom_histogram()
+```
+]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Example 2: Scatter plots]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot()
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response
+  ))
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response
+  ))
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response
+  )) + 
+  geom_point()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response
+  )) +
+  geom_point()
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response,
+    colour = condition
+  )) + 
+  geom_point()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response,
+    colour = condition
+  )) + 
+  geom_point()
+```
+]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response,
+    colour = condition
+  )) + 
+  geom_point() + 
+  geom_rug()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(mapping = aes(
+    x = age, 
+    y = response,
+    colour = condition
+  )) + 
+  geom_point() + 
+  geom_rug()
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Examples 3-5: Bars, boxes and violins]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(aes(x = gender)) +  
+  facet_wrap(~condition) +   
+  geom_bar()                 
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(aes(x = gender)) +  # set up the mapping
+  facet_wrap(~condition) +   # split it into plots
+  geom_bar()                 # add the bars!
+```
+]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(aes(
+    x = condition,
+    y = response)) + 
+  geom_boxplot()             
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(aes(x = condition, y = response)) + 
+  geom_boxplot()
+```
+]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(aes(
+    x = condition,
+    y = response)) + 
+  geom_violin()             
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(aes(x = condition, y = response)) + 
+  geom_violin()
+```
+]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>%
+  ggplot(aes(
+    x = condition,
+    y = response)) + 
+  geom_violin() +
+  geom_jitter()          
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>%
+  ggplot(aes(x = condition, y = response)) + 
+  geom_violin() +
+  geom_jitter()
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Examples 6: Bubbles]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames %>%
+  ggplot(mapping = aes(
+    x = test_item, 
+    y = response
+  )) + 
+  geom_count()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames %>%
+  ggplot(mapping = aes(
+    x = test_item, 
+    y = response
+  )) + 
+  geom_count() 
+```
+]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames %>%
+  ggplot(mapping = aes(
+    x = test_item, 
+    y = response
+  )) + 
+  geom_count() + 
+  facet_grid(
+    condition ~ sample_size
+  )
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames %>%
+  ggplot(mapping = aes(
+    x = test_item, 
+    y = response
+  )) + 
+  geom_count() + 
+  facet_grid(condition ~ sample_size)
+```
+]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames %>%
+  ggplot(mapping = aes(
+    x = test_item, 
+    y = response
+  )) + 
+  geom_count(
+    mapping = aes(colour = ..n..)
+  ) + 
+  facet_grid(
+    condition ~ sample_size
+  )
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames %>%
+  ggplot(mapping = aes(
+    x = test_item, 
+    y = response
+  )) + 
+  geom_count(aes(colour = ..n..)) + 
+  facet_grid(condition ~ sample_size)
+```
+]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Example 7: Error bars]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-50 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+library(lsr)
+
+frames_mean <- frames %>%
+  group_by(
+    condition, sample_size, test_item
+  ) %>%
+  summarise(
+    resp = mean(response),
+    lower = ciMean(response)[1],
+    upper = ciMean(response)[2]
+  )
+
+frames_mean
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+library(lsr)
+
+frames_mean <- frames %>%
+  group_by(condition,sample_size,test_item) %>%
+  summarise(
+    resp = mean(response),
+    lower = ciMean(response)[1],
+    upper = ciMean(response)[2]
+  )
+
+frames_mean
+```
+]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-50 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_mean %>%
+  ggplot(aes(
+    x = test_item, y = resp, colour = condition
+  )) +
+  geom_point() +
+  geom_line() +
+  geom_errorbar(aes(
+    ymin = lower, ymax = upper
+  )) +
+  facet_wrap(~sample_size)
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_mean %>%
+  ggplot(aes(
+    x = test_item, y = resp, colour = condition
+  )) +
+  geom_point() +
+  geom_line() +
+  geom_errorbar(aes(
+    ymin = lower, ymax = upper
+  )) +
+  facet_wrap(~sample_size)
+```
+]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Example 8: Contours]
+]]
+
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+frames_small %>% 
+  ggplot(mapping = aes(
+    x = age, 
+    y = response, 
+    colour = condition)) +
+  geom_point() + 
+  theme_bw() +
+  geom_density_2d() +
+  facet_wrap(~condition) +
+  ylim(0,9)
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+frames_small %>% 
+  ggplot(mapping = aes(
+    x = age, 
+    y = response, 
+    colour = condition)) +
+  geom_point() + 
+  theme_bw() +
+  geom_density_2d() +
+  facet_wrap(~condition) +
+  ylim(0,9)
+```
+]]
+]]
+
+
+
+<!-- DONE -->
+---
+
+class: bg-main1 middle center
+
+## thank u, next
+
+

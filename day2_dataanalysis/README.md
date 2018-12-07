@@ -8,7 +8,7 @@ Background:
 
 The modules for Day 2 consist of:
 
-- Working with git and GitHub ([tutorial](git-notes.md)), [slides](git-slides.html))
+- Working with git and GitHub ([tutorial](git-notes.md), [slides](git-slides.html))
 - Working with R markdown and R projects ([tutorial](rproj-notes.md), [slides](rproj-slides.html))
 - Data wrangling in tidyverse ([tutorial](dplyr-notes.md), [slides](dplyr-slides.html))
 - Data visualisation in tidyverse ([tutorial](ggplot-notes.md))
