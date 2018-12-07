@@ -1,0 +1,377 @@
+---
+title: "Statistical modelling"
+subtitle: "It's a thing that exists"
+author: "<br><br>Danielle Navarro &nbsp;`r anicon::faa('twitter', animate='float', rtext='@djnavarro')`"
+date: "<br><br>2018-12-11, Updated: `r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["kunoichi", "ninjutsu" , "assets/ninpo.css"]
+    self_contained: false
+    nature:
+      ratio: "16:9"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE, message=FALSE}
+options(htmltools.dir.version = FALSE)
+library(here)
+library(tidyverse)
+frames <- read_csv(here("analysis","data","frames_ex2.csv"))
+```
+
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Linear models]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+tinyframes <- frames %>%
+  group_by(id, age, condition) %>%
+  summarise(
+    response = mean(response)
+    ) %>%
+  ungroup()
+
+tinyframes
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+tinyframes <- frames %>%
+  group_by(id, age, condition) %>%
+  summarise(
+    response = mean(response)
+    ) %>%
+  ungroup()
+
+tinyframes
+```
+]]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+tinyframes %>%
+  group_by(condition) %>%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+tinyframes %>%
+  group_by(condition) %>%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+```
+]]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+tinyframes %>%
+  group_by(condition) %>%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+
+tinyframes %>% 
+  ggplot(aes(
+    x = age, 
+    y = response, 
+    colour = condition)) + 
+  geom_smooth(method = "lm") + 
+  geom_point()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+tinyframes %>%
+  group_by(condition) %>%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+
+tinyframes %>% 
+  ggplot(aes(
+    x = age, 
+    y = response, 
+    colour = condition)) + 
+  geom_smooth(method = "lm") + 
+  geom_point()
+```
+]]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+t.test(
+  formula = response ~ condition, 
+  data = tinyframes, 
+  var.equal = TRUE
+)
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+t.test(
+  formula = response ~ condition, 
+  data = tinyframes, 
+  var.equal = TRUE
+)
+```
+]]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+```
+]]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+
+mod2
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+
+mod2
+```
+]]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+
+anova(mod1, mod2)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+
+anova(mod1, mod2)
+```
+]]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+
+anova(mod1, mod2, mod3)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+
+anova(mod1, mod2, mod3)
+```
+]]]
+]]
+
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+
+AIC(mod1, mod2, mod3)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+
+AIC(mod1, mod2, mod3)
+```
+]]]
+]]
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+```{r, eval=FALSE, message = FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+
+BIC(mod1, mod2, mod3)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+```{r, eval=TRUE, message = FALSE, echo=FALSE}
+mod1 <- lm(formula = response ~ 1, data = tinyframes) 
+mod2 <- lm(formula = response ~ condition, data = tinyframes)
+mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+
+BIC(mod1, mod2, mod3)
+```
+]]]
+]]
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Linear mixed models]
+]]
+
+
+
+<!-- DONE -->
+---
+
+class: bg-main1 middle center
+
+## thank u
+
+

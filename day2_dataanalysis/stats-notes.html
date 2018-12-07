@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Statistical modelling</title>
+    <meta charset="utf-8">
+    <meta name="author" content="  Danielle Navarro  <span>&lt;i class="fab  fa-twitter faa-float animated "&gt;&lt;/i&gt;@djnavarro</span>" />
+    <link href="libs/remark-css/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="assets/ninpo.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Statistical modelling
+## It’s a thing that exists
+### <br><br>Danielle Navarro  <span>&lt;i class="fab  fa-twitter faa-float animated "&gt;&lt;/i&gt;@djnavarro</span>
+### <br><br>2018-12-11, Updated: 2018-12-08
+
+---
+
+
+
+
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Linear models]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+tinyframes &lt;- frames %&gt;%
+  group_by(id, age, condition) %&gt;%
+  summarise(
+    response = mean(response)
+    ) %&gt;%
+  ungroup()
+
+tinyframes
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## # A tibble: 225 x 4
+##       id   age condition response
+##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1     1    36 category      5.33
+##  2     2    46 category      7.05
+##  3     3    33 property      4.86
+##  4     4    71 property      3.86
+##  5     5    23 property      9   
+##  6     6    31 category      7.90
+##  7     7    23 property      3.76
+##  8     8    31 property      4   
+##  9     9    37 category      3.38
+## 10    10    46 category      5.86
+## # ... with 215 more rows
+```
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+tinyframes %&gt;%
+  group_by(condition) %&gt;%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## # A tibble: 2 x 4
+##   condition mean_resp sd_resp     n
+##   &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;
+## 1 category       5.40    1.56   114
+## 2 property       4.39    1.37   111
+```
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+tinyframes %&gt;%
+  group_by(condition) %&gt;%
+  summarise(
+    mean_resp = mean(response), 
+    sd_resp = sd(response),
+    n = n()
+  )
+
+tinyframes %&gt;% 
+  ggplot(aes(
+    x = age, 
+    y = response, 
+    colour = condition)) + 
+  geom_smooth(method = "lm") + 
+  geom_point()
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## # A tibble: 2 x 4
+##   condition mean_resp sd_resp     n
+##   &lt;chr&gt;         &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;
+## 1 category       5.40    1.56   114
+## 2 property       4.39    1.37   111
+```
+
+![](stats-notes_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+]]]
+]]
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+t.test(
+  formula = response ~ condition, 
+  data = tinyframes, 
+  var.equal = TRUE
+)
+```
+]]]
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## 
+## 	Two Sample t-test
+## 
+## data:  response by condition
+## t = 5.1625, df = 223, p-value = 5.388e-07
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  0.6259535 1.3988834
+## sample estimates:
+## mean in group category mean in group property 
+##               5.397661               4.385242
+```
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+mod1 &lt;- lm(formula = response ~ 1, data = tinyframes) 
+mod2 &lt;- lm(formula = response ~ condition, data = tinyframes)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+mod1 &lt;- lm(formula = response ~ 1, data = tinyframes) 
+mod2 &lt;- lm(formula = response ~ condition, data = tinyframes)
+
+mod2
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## 
+## Call:
+## lm(formula = response ~ condition, data = tinyframes)
+## 
+## Coefficients:
+##       (Intercept)  conditionproperty  
+##             5.398             -1.012
+```
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+mod1 &lt;- lm(formula = response ~ 1, data = tinyframes) 
+mod2 &lt;- lm(formula = response ~ condition, data = tinyframes)
+
+anova(mod1, mod2)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: response ~ 1
+## Model 2: response ~ condition
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1    224 539.98                                  
+## 2    223 482.33  1    57.645 26.652 5.388e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]]]
+]]
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+mod1 &lt;- lm(formula = response ~ 1, data = tinyframes) 
+mod2 &lt;- lm(formula = response ~ condition, data = tinyframes)
+mod3 &lt;- lm(formula = response ~ condition + age, data = tinyframes)
+
+anova(mod1, mod2, mod3)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+## Analysis of Variance Table
+## 
+## Model 1: response ~ 1
+## Model 2: response ~ condition
+## Model 3: response ~ condition + age
+##   Res.Df    RSS Df Sum of Sq       F    Pr(&gt;F)    
+## 1    224 539.98                                   
+## 2    223 482.33  1    57.645 26.6544 5.399e-07 ***
+## 3    222 480.12  1     2.214  1.0238    0.3127    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+]]]
+]]
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+mod1 &lt;- lm(formula = response ~ 1, data = tinyframes) 
+mod2 &lt;- lm(formula = response ~ condition, data = tinyframes)
+mod3 &lt;- lm(formula = response ~ condition + age, data = tinyframes)
+
+AIC(mod1, mod2, mod3)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+##      df      AIC
+## mod1  2 839.4940
+## mod2  3 816.0928
+## mod3  4 817.0575
+```
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.row.bg-main1[.content.vtop.center[
+
+.pull.left[.pad1[.font2[
+
+```r
+mod1 &lt;- lm(formula = response ~ 1, data = tinyframes) 
+mod2 &lt;- lm(formula = response ~ condition, data = tinyframes)
+mod3 &lt;- lm(formula = response ~ condition + age, data = tinyframes)
+
+BIC(mod1, mod2, mod3)
+```
+]]]
+]]
+
+.row.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```
+##      df      BIC
+## mod1  2 846.3262
+## mod2  3 826.3411
+## mod3  4 830.7219
+```
+]]]
+]]
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Linear mixed models]
+]]
+
+
+
+&lt;!-- DONE --&gt;
+---
+
+class: bg-main1 middle center
+
+## thank u
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
