@@ -390,6 +390,17 @@ class: bg-main1 center middle
 class: bg-main1 center middle
 
 <br>
+<img src="images/quinn_typing.gif", width="50%">
+<br>
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+
+class: bg-main1 center middle
+
+<br>
 <img src="images/readme_rstudio2.jpg", width="90%">
 <br>
 
@@ -544,7 +555,8 @@ class: split-two bg-main1
 
 # But beware... of merge conflicts 
 
-<img src="https://media.giphy.com/media/10Iu43S5QuBTMc/giphy.gif" width = "90%">
+<img src="images/daria_burning.gif" width = "90%">
+<!--<img src="https://media.giphy.com/media/10Iu43S5QuBTMc/giphy.gif" width = "90%">-->
 
 ]]
 
