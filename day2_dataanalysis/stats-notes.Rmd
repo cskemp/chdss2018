@@ -1,104 +1,73 @@
 ---
-title: "Statistical modelling"
-subtitle: "It's a thing that exists"
-author: "<br><br>Danielle Navarro &nbsp;`r anicon::faa('twitter', animate='float', rtext='@djnavarro')`"
-date: "<br><br>2018-12-11, Updated: `r Sys.Date()`"
-output:
-  xaringan::moon_reader:
-    lib_dir: libs
-    css: ["kunoichi", "ninjutsu" , "assets/ninpo.css"]
-    self_contained: false
-    nature:
-      ratio: "16:9"
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+title: '<div class="jumbotron"><h1 class="title toc-ignore display-3">Linear models in R</h1></div>'
+author: "Danielle Navarro"
+date: "5 December 2018"
+output: github_document
 ---
 
-```{r setup, include=FALSE, message=FALSE}
-options(htmltools.dir.version = FALSE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!--
+
+  html_document:
+    includes:
+      in_header: header.html
+    theme: flatly
+    highlight: textmate
+    css: mystyle.css
+
+-->
+
+```{r}
 library(here)
 library(tidyverse)
 library(lme4)
 frames <- read_csv(here("analysis","data","frames_ex2.csv"))
-
-library(knitr)
-hook_output <- knit_hooks$get("output")
-knit_hooks$set(output = function(x, options) {
-  lines <- options$output.lines
-  if (is.null(lines)) {
-    return(hook_output(x, options))  # pass to default hook
-  }
-  x <- unlist(strsplit(x, "\n"))
-  more <- "..."
-  if (length(lines)==1) {        # first n lines
-    if (length(x) > lines) {
-      # truncate the output, but add ....
-      x <- c(head(x, lines), more)
-    }
-  } else {
-    x <- c(more, x[lines], more)
-  }
-  # paste these lines together
-  x <- paste(c(x, ""), collapse = "\n")
-  hook_output(x, options)
-})
 ```
 
+## What this section is not
 
-class: bg-main1 center middle hide-slide-number
+Because R is a *statistical* programming language it comes with a lot of hypothesis tests and tools built in, and of course there is an overwhelming number of packages out there that extend this. It is impossible to cover the whole thing in a brief tutorial, so I'm going to be a little picky. For example, I'm going to skip over the most commonly used classical tests, because they're comparatively easy to learn and it's not the best use of our time! For future reference though:
 
-.reveal-text.bg-main2[.pad1[
-.font4[Linear models]
-]]
+- The `t.test()` function handles one-sample, independent samples and paired samples t-tests
+- The `chisq.test()` function handles chi-square tests of independence and Pearson goodness of fit tests
+- The `prop.test()` function tests for the equality of two proportions.
+- The `binom.test()` function allows you to do a binomial test of choice proportion against a known rate
+- The `wilcox.test()` function handles one- and two-sample nonparametric tests of equality of means
+- The `cor.test()` function tests the significance of a correlation
 
+Of course, there are many, many others! What we're going to focus on here is:
 
+- Linear modelling with the `lm()` function
+- Linear mixed models with the `lmer()` function (in the `lme4` package)
+- Generalised linear mixed models with the `glmer()` function (also from `lme4`)
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
+## Linear models
 
-.column.bg-main1[.content.vtop.center[
+Linear models should be fairly familiar to most: it's essentially what we were all taught in undergraduate under the name multiple regression. However, what is sometimes underemphasised is the fact that correlation, ANOVA, and t-tests can all be cast within the linear modelling framework, and R allows you do do all these using the `lm()` function. So that's where we're going to start. 
 
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+To begin with, we need a data set. For this purpose, let's construct a simplified version of the `frames` data, by averaging all the responses made by a person, regardless of the number of observations or the test item: 
+
+```{r}
 tinyframes <- frames %>%
   group_by(id, age, condition) %>%
   summarise(
     response = mean(response)
     ) %>%
   ungroup()
-
-tinyframes
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-tinyframes <- frames %>%
-  group_by(id, age, condition) %>%
-  summarise(
-    response = mean(response)
-    ) %>%
-  ungroup()
+Let's take a look at the `tinyframes` dataset we've just created:
 
-tinyframes
+```{r}
+glimpse(tinyframes)
 ```
-]]]
-]]
 
+A very typical way to produce descriptive statistics is to calculate mean and standard deviation for each condition, and count the number of people in each condition.
 
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 tinyframes %>%
   group_by(condition) %>%
   summarise(
@@ -107,332 +76,163 @@ tinyframes %>%
     n = n()
   )
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-tinyframes %>%
-  group_by(condition) %>%
-  summarise(
-    mean_resp = mean(response), 
-    sd_resp = sd(response),
-    n = n()
-  )
-```
-]]]
-]]
+We would also want to visualise the data. It is almost always a mistake to start trying to model a data set without properly exploring it and making sure you have a good "feel" for what is going on. So let's draw a picture!
 
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-tinyframes %>%
-  group_by(condition) %>%
-  summarise(
-    mean_resp = mean(response), 
-    sd_resp = sd(response),
-    n = n()
-  )
-
+```{r}
 tinyframes %>% 
-  ggplot(aes(
-    x = age, 
-    y = response, 
-    colour = condition)) + 
+  ggplot(aes(x = age, y = response, colour = condition)) + 
   geom_smooth(method = "lm") + 
   geom_point()
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-tinyframes %>%
-  group_by(condition) %>%
-  summarise(
-    mean_resp = mean(response), 
-    sd_resp = sd(response),
-    n = n()
-  )
+Intuitively, it looks like the two conditions are likely to be different to one another; but if there's any effect of age it would have to be tiny. 
 
-tinyframes %>% 
-  ggplot(aes(
-    x = age, 
-    y = response, 
-    colour = condition)) + 
-  geom_smooth(method = "lm") + 
-  geom_point()
-```
-]]]
-]]
+### Using lm to do a t-test
 
+So let's start with a simple question. Is there a "significant" difference between the two conditions? I'm not a fan of orthodox null hypothesis testing, to be honest, but it does have it's place. Traditionally, the solution is the t-test:
 
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 t.test(
   formula = response ~ condition, 
   data = tinyframes, 
   var.equal = TRUE
 )
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-t.test(
-  formula = response ~ condition, 
-  data = tinyframes, 
-  var.equal = TRUE
-)
-```
-]]]
-]]
+Okay we have a significant difference. So we reject the null hypothesis (i.e., that the two groups have the same population mean) and accept the alternative (i.e., that they have different population means). Yay. I guess. The moment we start caring about data analysis in any detail, though, it helps to recast these "hypotheses" in terms of *statistical models*. 
 
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 mod1 <- lm(formula = response ~ 1, data = tinyframes) 
 mod2 <- lm(formula = response ~ condition, data = tinyframes)
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-```
-]]]
-]]
+To give you a sense of what R has just done, it has estimated the coefficients for two different regression models: `mod1` only includes an intercept term (i.e., the "grand mean"), wherese `mod2` contains two terms:
 
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-
+```{r}
 mod2
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
+Notice that the coefficients have a clear relationship to the group means: the "intercept" term is identical to the group mean for category sampling, and the "conditionproperty" term is what you have to add to that to get the group mean for property sampling (i.e., 5.4 - 1.0 = 4.4). It's expressed in different language than the t-test, but `mod2` nevertheless maps onto the alternative hypothesis. 
 
-mod2
-```
-]]]
-]]
+To compare these two linear models, we can call the `anova()` function:
 
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-
+```{r}
 anova(mod1, mod2)
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
+This doesn't look like the output of a t-test, but if we look carefully we notice that:
 
-anova(mod1, mod2)
+- The $p$-values are the same
+- The test statistics are related: $t = \sqrt{F}$
+- The residual df in the ANOVA table is the same as the t-test df
+
+In a sense, what we've just done is illustrate the fact that the Student t-test is equivalent to a one-way ANOVA with two groups (which we were all taught as undergraduates), but we've used linear models to do it! 
+
+Before moving on, I should mention that this is a slightly different ANOVA table than what you might be expecting to see. You can get the more traditional version like this,
+
+```{r}
+anova(lm(response ~ condition, tinyframes))
 ```
-]]]
-]]
 
+but it's essentially the same thing and I don't want to spend too much time on this since the focus is really on how we can extend these ideas. 
 
+### Mixing continuous and discrete predictors
 
+One nice thing about linear models is that, because the framework is pretty general, there's nothing stopping you from including continuous variables and categorical variables in the same model (as one might do in an ANCOVA). So, sticking with out `tinyframes` data, perhaps we should check to see if we can detect an effect of age. It doesn't look very likely, but let's run the model anyway. What we'll do this time is take the same two models as before `mod1` and `mod2`, but now add a third model that includes `age` as an additional predictor:
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
+```{r}
 mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+```
 
+If we take a quick look at the coefficients
+
+```{r}
+mod3
+```
+
+we can see that age really isn't having much of an effect, if any. To compare all three models using an $F$-test, what we would do is this:
+
+```{r}
 anova(mod1, mod2, mod3)
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+In this ANOVA table, what you're looking at is a test of `mod2` against `mod1`, followed by `mod3` against `mod2`. This suggests that `mod2` is preferred over `mod1` (reject the null), but `mod3` isn't preferred over `mod2` (retain the null).
 
-anova(mod1, mod2, mod3)
-```
-]]]
-]]
+### From hypothesis tests to model selection
 
+I have a confession to make. I really dislike using null hypothesis tests the way we did in the previous analysis. Most of the framework for null hypothesis testing comes from work by Jerzy Neyman, and in his framework the goal is to *prespecify* a formal procedure such that you can input a data set, and output a binary decision; and specifically to ensure that this decision procedure controls your Type 1 error rate. This approach to statistics has its place, but it's not actually all that consistent with what we're doing here. Neyman's approach is completely automated: you *must* follow the procedure no matter what your data looks like, or else your Type 1 error isn't controlled. So if explore your data and they turn out to be super weird, you must apply your prespecified decision rule. If you don't not only is the p-value for this test completely meaningless, it also strongly invalidates any other p-values you report, even if you did stick to the procedure in those cases: because it implies that, had the data turned out some other way, you wouldn't have stuck to the procedure, and Neyman's theory only works if you *always* follow the prespecified analysis plan. No excuses, no exceptions. 
 
+In real life, this never actually happens. Science doesn't work that way. What I find bizarre, is that while statisticians for the most part have recognised that this presents a problem for Neyman's theory, there is a school of thought within psychology that the problem lies with the *scientist* for not adhering to this stupid statistical theory. Well, nuts to that. I have no particular interest in following Neyman's absurd rules, and my main goal as a scientist is something more akin to Ockham's razor: find the simplest model that provides an good enough account of the data.
 
+In essence, what I've done here is reframed the statistical problem, and changed it from a "hypothesis testing" problem to a "model selection" problem. The tools used for model selection are often somewhat different, and the underlying philosophy is often more aligned with the Ockham's razor idea. Two (very simple, and often flawed) approaches to this are the Akaike information criterion (AIC) and the Bayesian information criterion (BIC), both of which have been around since the 1970s. For our linear models, we can evaluate them using the `AIC()` and `BIC()` functions: 
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
-
+```{r}
 AIC(mod1, mod2, mod3)
-```
-]]]
-]]
-
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
-
-AIC(mod1, mod2, mod3)
-```
-]]]
-]]
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
-
 BIC(mod1, mod2, mod3)
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-mod1 <- lm(formula = response ~ 1, data = tinyframes) 
-mod2 <- lm(formula = response ~ condition, data = tinyframes)
-mod3 <- lm(formula = response ~ condition + age, data = tinyframes)
+Smaller values of AIC and BIC are better, and it's hardly a surprise that `mod2` turns out to be the best one!
 
-BIC(mod1, mod2, mod3)
+### Exploring the model
+
+Overall, `mod2` looks pretty sensible:
+
+```{r}
+summary(mod2)
+confint(mod2)
 ```
-]]]
-]]
+
+TODO:
+
+- the `predict()` function
+- the `residuals()` function
+- regression diagnostics using `plot()`
 
 
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: bg-main1 center middle hide-slide-number
 
-.reveal-text.bg-main2[.pad1[
-.font4[Linear mixed models 1]
-]]
+## Example 1: A simple mixed model
 
+To get started with mixed models, we will look at a version of the `frames` data that is a little more complex than the `tinyframes` data from the last section, but not quite the full thing yet. Specifically, what we'll do is take the (within-subject) average responses across every `test_item`, but we *won't* average across the different values of `n_obs`. That gives us a `modestframes` data set:
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 modestframes <- frames %>% 
   group_by(id, age, condition, n_obs) %>%
   summarise(response = mean(response)) %>%
   ungroup()
 
-modestframes
+glimpse(modestframes)
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-modestframes <- frames %>% 
-  group_by(id, age, condition, n_obs) %>%
-  summarise(response = mean(response)) %>%
-  ungroup()
+Let's start by building some possible models. The simplest model we might want to consider is one in which the population mean response is different from zero (i.e., a fixed effect for the intercept), but there is variation in the mean response across individuals (i.e., a random intercept for each participant). The model formula for this is written:
 
-modestframes
+```{r, eval = FALSE}
+response ~ 1 + (1|id)
 ```
-]]]
-]]
 
+The first part of this model description `response ~ 1` is something we've seen before under linear models: it's the model that has an intercept but nothing else! Anything in parentheses `(1|id)` is a random effect term. In this case, we have a separate intercept for each person (i.e., each unique `id`). As an alternative, we might want to consider a model that includes fixed effects for the between-subject factor `condition` and the within-subject factor `n_obs`. The formula for that, expressed in `lme4` notation, is 
 
+```{r, eval = FALSE}
+response ~ 1 + condition + n_obs + (1|id)
+```
 
+In real life, we might want to also consider models that only contain one of these two fixed effects, but for simplicity I'm not going to bother with that here. Instead, let's jump straight to estimating these two models:
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
+```{r modestframeslmer, cache = TRUE}
+modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
+modest2 <- lmer(formula = response ~ condition + n_obs + (1|id), data = modestframes)
+```
 
-.column.bg-main1[.content.vtop.center[
+To compare them:
 
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
+anova(modest1, modest2)
+```
+
+One thing that is nice about mixed models is that you can allow much more customisation than this. For instance, is it really all that plausible to think that everyone has a unique "random intercept" term, but is affected by the sample size in precisely the same way? That seems unlikely. To see this, let's plot the data for a random subset of 80 participants:
+
+```{r}
 whichids <- sample(unique(modestframes$id), 80)
 modestframes %>%
   filter(id %in% whichids) %>%
@@ -441,435 +241,243 @@ modestframes %>%
   geom_line(show.legend = FALSE, alpha = .3) + 
   facet_wrap(~ condition)
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE}
-whichids <- sample(unique(modestframes$id), 80)
-modestframes %>%
-  filter(id %in% whichids) %>%
-  ggplot(aes(x = n_obs, y = response, colour = factor(id))) +
-  geom_point(show.legend = FALSE) + 
-  geom_line(show.legend = FALSE, alpha = .3) + 
-  facet_wrap(~ condition)
-```
-]]]
-]]
+To my mind, it beggars belief to think that these lines are all supposed to have the same slope, so we should probably extend the model a bit. Let's suppose that everyone has their own "random slope" term (i.e., everyone has their own regression coefficient for the effect of sample size). That gives us this model:
 
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
-modest2 <- lmer(formula = response ~ condition + n_obs + (1|id), data = modestframes)
-
-anova(modest1, modest2)
-```
-]]]
-]]
-
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
-modest2 <- lmer(formula = response ~ condition + n_obs + (1|id), data = modestframes)
-
-anova(modest1, modest2)
-```
-]]]
-]]
-
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-modest1 <- lmer(formula = response ~ 1 + (1|id), data = modestframes)
-modest2 <- lmer(formula = response ~ condition + n_obs + (1|id), data = modestframes)
+```{r modestframeslmer2, cache = TRUE}
 modest3 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = modestframes)
-
-anova(modest1, modest2, modest3)
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-modest3 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = modestframes)
-anova(modest1, modest2, modest3)
+Okay let's compare the expanded model to the model that only has a random intercept:
+
+```{r}
+anova(modest2, modest3)
 ```
-]]]
-]]
 
+Overall, it looks like this new model is providing a better account of the data, as evidenced by the lower AIC and BIC values. We can get a quantitative summary of how this model performs:
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-30 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 summary(modest3)
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, output.lines=1:10}
-summary(modest3)
-```
-]]]
-]]
+Very nice. However, if we're thinking that we might be satisfied with this model, we should now start the process of "model criticism". Let's extract the fitted values ("predictions") and add them to the data frame:
 
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-30 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-summary(modest3)
-```
-]]]
-]]
-
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, output.lines=11:23}
-summary(modest3)
-```
-]]]
-]]
-
-
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-30 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 modestframes$modelfit <- predict(modest3)
-modestframes
 ```
-]]]
-]]
 
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-modestframes$modelfit <- predict(modest3)
-modestframes
-```
-]]]
-]]
+One very simple check is to draw a scatterplot showing the fitted (modelled) responses against the raw data. How closely do they resemble one another?
 
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-30 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-modestframes %>% 
-  ggplot(aes(
-    x = modelfit, 
-    y = response)) + 
-  geom_point() 
-```
-]]]
-]]
-
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-modestframes %>% 
-  ggplot(aes(x = modelfit, y = response)) + 
-  geom_point()
-```
-]]]
-]]
-
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-30 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-modestframes %>% 
-  ggplot(aes(
-    x = modelfit, 
-    y = response)) + 
-  geom_point() + 
-  facet_grid(
-    condition ~ n_obs) + 
-  geom_abline(
-    intercept = 0, 
-    slope = 1)
-```
-]]]
-]]
-
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
+```{r}
 modestframes %>% 
   ggplot(aes(x = modelfit, y = response)) + 
   geom_point() + 
   facet_grid(condition ~ n_obs) + 
   geom_abline(intercept = 0, slope = 1)
 ```
-]]]
-]]
 
+They seem reasonably close to one another. There are hints of some systematic misfits near the edges of the response range, but nothing *too* terrible. To take a slightly closer look, let's plot the fitted values for the same 80 individuals we selected randomly earlier on:
 
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 modestframes %>%
   filter(id %in% whichids) %>%
-  ggplot(aes(
-    x = n_obs, y = modelfit, 
-    colour = factor(id))) +
+  ggplot(aes(x = n_obs, y = modelfit, colour = factor(id))) +
   geom_point(show.legend = FALSE) + 
-  geom_line(show.legend = FALSE, 
-            alpha = .3) + 
+  geom_line(show.legend = FALSE, alpha = .3) + 
   facet_wrap(~ condition)
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-modestframes %>%
-  filter(id %in% whichids) %>%
-  ggplot(aes(
-    x = n_obs, y = modelfit, 
-    colour = factor(id))) +
-  geom_point(show.legend = FALSE) + 
-  geom_line(show.legend = FALSE, 
-            alpha = .3) + 
-  facet_wrap(~ condition)
-```
-]]]
-]]
+Overall this seems like a reasonable, though imperfect, approximation to what appears to be going on in the data. 
+
+TODO:
+- check residuals
+- interpret effects within the model
+- explain the underlying model
+
+- comment on REML vs ML: REML fits the fixed effects first, then estimates the random effects; whereas ML does them jointly. General advice is that you have to test fixed effects using the ML fits; to test random effects you can do it either way, but REML is generally preferred (for reasons).
+
+## Example 2: More complicated designs
+
+At long last, we are at the point where we might be able to construct a sensible model for the *actual* `frames` data. To guide us in this process, let's plot the raw data for 20 randomly chosen subjects. This is pretty important, because each person is providing 21 responses that we expect to be related to one another in a systematic way, but we aren't completely sure what structure we'll find (okay, that's only half true - I did have some suspicions about what to expect, on the basis of substantive theory, but we aren't up to the cognitive modelling section of the summer school yet!) So let's take a look: 
 
 
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Linear mixed models 2]
-]]
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-whichids <- sample(
-  x = unique(frames$id), 
-  size = 20) 
-
+```{r}
+whichids <- sample(unique(frames$id), 20) 
 frames %>%
   filter(id %in% whichids) %>%
-  ggplot(aes(
-    x = test_item, 
-    y = response, 
-    shape = condition, 
-    colour = factor(n_obs))) +
+  ggplot(aes(x = test_item, y = response, shape = condition, colour = factor(n_obs))) +
   geom_point() + 
   geom_line(alpha = .3) + 
   facet_wrap(~ id)
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-whichids <- sample(
-  x = unique(frames$id), 
-  size = 20) 
+There's quite a variety of things there. None of these panels look like random responding, but it's immediately obvious from inspection that there are quite pronounced individual differences. It's not clear how well we're going to do by modelling these as linear functions, but let's give it a try and see how far we can get!
 
-frames %>%
-  filter(id %in% whichids) %>%
-  ggplot(aes(
-    x = test_item, 
-    y = response, 
-    shape = condition, 
-    colour = factor(n_obs))) +
-  geom_point() + 
-  geom_line(alpha = .3) + 
-  facet_wrap(~ id)
-```
-]]]
-]]
+From the last exercise, we can be reasonably sure that there is a fixed effect of `condition` and `n_obs`, as well as random intercepts and slopes as a function of `n_obs`. So our starting point will be the model that came out of that modelling exercise, and -- for the sake of our sanity -- I'm only going to look at one alternative model, namely one that adds a fixed and random effect of `test_item` (mainly because it's kind of a foregone conclusion that these effects exist!)
 
-
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.row.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
-linframes1 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = frames)
-linframes2 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), 
-                   data = frames)
-
-anova(linframes1, linframes2)
-```
-]]]
-]]
-
-.row.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
+```{r linframes, cache = TRUE}
 linframes1 <- lmer(formula = response ~ condition + n_obs + (1 + n_obs|id), data = frames)
 linframes2 <- lmer(formula = response ~ condition + test_item + (1 + test_item + n_obs|id), data = frames)
+```
 
+As before, we can call the `anova()` function to run some simple model comparisons:
+
+```{r}
 anova(linframes1, linframes2)
 ```
-]]]
-]]
 
+I personally prefer to rely on BIC over $p$-values or AIC, but realistically none of them are ideal, and in any case the differences in model performance are so extreme it doesn't matter what you use. They all give the same answer. So now let's take a closer look at the model performance:
 
+```{r}
+summary(linframes2)
+```
 
+The correlation term here deserves some explanation [TODO]
 
+Add the model fits and residuals
 
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: split-40 bg-main1
-
-.column.bg-main1[.content.vtop.center[
-
-.pull.left[.pad1[.font2[
-```{r, eval=FALSE, message = FALSE}
+```{r}
 linframes <- frames
-linframes$modelfit <- predict(
-  linframes2)
-linframes$residuals <- residuals(
-  linframes2)
+linframes$modelfit <- predict(linframes2)
+linframes$residuals <- residuals(linframes2)
+```
 
+Now that we have a model, let's see how well it holds up under a good old-fashioned eyeball test. Here are the model predictions (lines) plotted against the raw ata for the same 20 participants:
+
+```{r} 
 linframes %>%
   filter(id %in% whichids) %>%
-  ggplot(aes(
-    x = test_item, y = response, 
-    shape = condition, 
-    colour = factor(n_obs))) +
+  ggplot(aes(x = test_item, y = response, shape = condition, colour = factor(n_obs))) +
   geom_point() + 
-  geom_line(aes(y = modelfit), 
-            alpha = .3) + 
+  geom_line(aes(y = modelfit), alpha = .3) + 
   facet_wrap(~ id)
 ```
-]]]
-]]
 
-.column.bg-main3[.content.vtop.center[
-.pull.left[.pad1[.font2[
-```{r, eval=TRUE, message = FALSE, echo=FALSE, cache=TRUE}
-linframes <- frames
-linframes$modelfit <- predict(
-  linframes2)
-linframes$residuals <- residuals(
-  linframes2)
+It's okay, I guess, but a little less than ideal. There are some clear nonlinearities in the data. At the individual-subject level, some responses look linear, others look S-shaped, and others look curvilinear. It would be nice to capture this in the model.
 
-linframes %>%
+
+## Generalised linear mixed models
+
+```{r}
+glmerframes <- frames %>% mutate(generalisation = (response+.1)/9.2)
+```
+
+```{r glmer, cache=TRUE}
+logitmod <- glmer(
+  formula = generalisation ~ condition + test_item + n_obs + (1 + test_item + n_obs|id), 
+  family = gaussian(link = "logit"), 
+  data = glmerframes)
+```
+
+For comparison, lets fit this model with a linear link function (i.e., same model as last time, but using the rescaled data)
+
+```{r lmer, cache=TRUE}
+linearmod <- lmer(
+  formula = generalisation ~ condition + test_item + n_obs + (1 + test_item + n_obs|id), 
+  data = glmerframes)
+```
+
+
+Comparing models?
+
+```{r}
+anova(linearmod, logitmod)
+```
+
+Again, all three criteria (AIC, BIC, $p$-values if you absolutely must) lead to the same conclusion, namely that the nonlinear model provides the better account of people's responses. As usual, we should take a good look at what the model is actually doing before we accept anything:
+
+
+```{r}
+glmerframes$modelfit <- predict(logitmod, type="response")
+glmerframes$residuals <- residuals(logitmod, type="response")
+
+glmerframes %>%
   filter(id %in% whichids) %>%
-  ggplot(aes(
-    x = test_item, y = response, 
-    shape = condition, 
-    colour = factor(n_obs))) +
+  ggplot(aes(x = test_item, y = generalisation, shape = condition, colour = factor(n_obs))) +
   geom_point() + 
-  geom_line(aes(y = modelfit), 
-            alpha = .3) + 
+  geom_line(aes(y = modelfit), alpha = .3) + 
   facet_wrap(~ id)
 ```
-]]]
-]]
+
+Okay, at long last I'm "happy". It's not a perfect model but it's good enough that we can use it to test for "effects":
+
+```{r}
+summary(logitmod)
+```
+
+It's taken us a while, but I think we're now at the stage where we could reasonably claim that there are genuine effects of test item and sampling condition. It's less clear whether there is an effect of sample size. 
+
+### Data visualisation... it matters!
+
+Remember this?
+
+```{r}
+frames %>%
+  group_by(condition, sample_size, test_item) %>%
+  summarise(response = mean(response)) %>%
+  ggplot(aes(x = test_item, y = response, colour = condition)) +
+  geom_point() +
+  geom_line() +
+  facet_wrap(~sample_size)
+```
+
+Why am I fitting this model without interaction terms? Just eyeballing the mean response it's really clear that there is a three-way interaction here. The difference between property sampling and category sampling increases as a function of sample size, but *only* for the distant test items.
+
+The answer:
+
+```{r glmernasty, cache=TRUE}
+kitchensink <- glmer(
+  formula = generalisation ~ condition * test_item * n_obs + (1 + test_item * n_obs|id), 
+  family = gaussian(link = "logit"), 
+  data = glmerframes)
+```
+
+Yeah, this is not a happy place to be. Once your model gets this complicated, be prepared for bad things to happen. Nevertheless, let's take a quick check and see if this model is better:
+
+```{r}
+anova(logitmod, kitchensink)
+```
+
+Yep. Even though we're having horrible problems getting the bloody thing to converge (so our estimates are probably all a bit wrong), it's *still* providing a vastly superior fit to the last one. Well, let's take a look...
+
+```{r, fig.height=20, fig.width=10}
+glmerframes2 <- glmerframes
+glmerframes2$modelfit <- predict(kitchensink, type="response")
+glmerframes2$residuals <- residuals(kitchensink, type="response")
+
+glmerframes2 %>%
+  #filter(id %in% whichids) %>%
+  ggplot(aes(x = test_item, y = generalisation, shape = condition, colour = factor(n_obs))) +
+  geom_point() + 
+  geom_line(aes(y = modelfit), alpha = .3) + 
+  facet_wrap(~ id)
+```
+
+Yeah, that's actually better. The eyeball test again agrees with AIC, BIC and even the humble $p$-value. This model does a much better job of fitting the data in the experiment. 
+
+So now let's use the `summary()` function to take a look at the model coefficients and the "standard" tests of significance:
+
+```{r}
+summary(kitchensink)
+```
+
+Uh huh. What the hell does any of this mean??!? I mean, it's the same output we've seen at every previous step in the process, but now it just looks like an arbitrary collection of asterisks and numbers. 
+
+To my mind, the only part of this output that matters is this one line, highlighting the fact that yes, once you put together a proper model that accounts for individual differences and can match the structure of the data reasonably well, there is indeed a three way interaction. Everything matters (except totally irrelevant stuff like age and the colour of the wallpaper) and everything interacts with everything else:
+
+```
+## conditionproperty:test_item:n_obs -0.07719    0.02095  -3.685 0.000229 ***
+```
+
+If you want to get more out of the data than this, statistics won't help you any more. You're going to have to try doing some psychology, I'm afraid...
 
 
+## THE BIGGEST LESSON
 
+If I were exploring the data without the guide of substantive theory and with no proper cognitive model to tell me where to look next, I would be *very* wary of going any further. Blindly trying to make sense of three-way interaction effects  is a terrible idea, and you'll end up chasing shadows. Nothing -- and I repeat, **NOTHING** -- in what we have done so far, is "theory". Yes, what we have here is a "model" in the sense that statisticians refer to a model, but it is *not* a cognitive model in the sense that any psychologist would care about. It is not constrained by any notion of how people are solving the reasoning problem. There is no substance here: it is purely data analysis. One of the big traps that psychologists have fallen for, time and time again over the last century, is believing that statistical models can provide a substitute for theory. Call it the *psychometric fallacy* if you will. 
 
-
-<!-- *********** NEW SLIDE ************** -->
----
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Generalised linear mixed models]
-]]
-
-
-<!-- *********** NEW SLIDE ************** -->
----
-
-class: bg-main1 center middle
-
-# Yeah, maybe not today...
-
-<br>
-<img src="images/glmer.png", width="80%">
-<br>
-
-
-
-<!-- DONE -->
----
-
-class: bg-main1 middle center
-
-## thank u
-
-<!-- DONE -->
----
-
-class: bg-main3 middle center
-
-## next!
+Tomorrow, Charles will talk more about what actually does constitute theory!
 
 
