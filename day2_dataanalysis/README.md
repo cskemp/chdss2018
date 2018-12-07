@@ -8,10 +8,10 @@ Background:
 
 The modules for Day 2 consist of:
 
-- [Working with git and GitHub](git-notes.md)
-- [Working with R markdown and R projects](rproj-notes.md)_
-- [Data wrangling in tidyverse (readr, tibble, dplyr, tidyr)](dplyr-notes.md)
-- [Data visualisation in tidyverse (ggplot2)](ggplot-notes.md)
-- [Linear models in R](linearmodels-notes.md)
-- [Mixed models in in R](mixedmodels-notes.md) 
+- Working with git and GitHub ([tutorial](git-notes.md)), [slides](git-slides.html))
+- Working with R markdown and R projects ([tutorial](rproj-notes.md), [slides](rproj-slides.html))
+- Data wrangling in tidyverse ([tutorial](dplyr-notes.md), [slides](dplyr-slides.html))
+- Data visualisation in tidyverse ([tutorial](ggplot-notes.md))
+- Linear models in R ([tutorial](linearmodels-notes.md))
+- Mixed models in in R ([tutorial](mixedmodels-notes.md)) 
 
