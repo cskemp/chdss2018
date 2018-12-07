@@ -144,6 +144,23 @@ here("analysis","data","mydatafile.csv")
 ```
 ]]
 
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+<img src="images/horst_tidyr.png", width="70%">
+
+[@allison_horst](https://twitter.com/allison_horst)
+
+]]
+
+
 
 <!-- *********** NEW SLIDE ************** -->
 ---
