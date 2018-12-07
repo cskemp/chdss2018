@@ -598,29 +598,187 @@ class: split-40 bg-main1
 
 <!-- *********** NEW SLIDE ************** -->
 ---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Introducing the pipe]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
 class: split-40 bg-main1
 
 .column.bg-main1[.content.vmiddle.center[
 
-# Skim over the data
+# The pipe, %>%
 
 .pull.left[.pad1[.font2[
-- Gives means, std dev.
-- Gives quantiles
-- Even has little text histograms
-- (Not always useful though!)
+- Take the frames data...
+- Do one thing...
+- Then another...
+- And then one more...
 ]]]
+]]
+--
+.column.bg-main3[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+```{}
+frames %>%
+  do_one_thing(.) %>%
+  then_another(.) %>%
+  and_then_one_more(.)
+```
 
+]]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# Regular code
+
+```{}
+do_one_thing(frames) 
+```
+
+]]]
+]]
+--
+.column.bg-main3[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# The piped version
+
+```{}
+frames %>% do_one_thing() 
+```
+
+]]]
+]]
+
+
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# Regular code
+
+```{}
+then_another(
+  do_one_thing(
+    frames
+  ) 
+)
+```
+
+]]]
 ]]
 
 .column.bg-main3[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
 
-<img src="images/explore5.png" width = "90%">
+# The piped version
 
+```{}
+frames %>% 
+  do_one_thing() %>%
+  then_another()
+```
+
+]]]
 ]]
 
 
 
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# Regular code
+
+```{}
+and_then_one_more(
+  then_another(
+    do_one_thing(
+      frames
+    ) 
+  )
+)
+```
+
+]]]
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# The piped version
+
+```{}
+frames %>% 
+  do_one_thing() %>%
+  then_another() %>%
+  and_then_one_more()
+```
+
+]]]
+]]
+
+<!-- *********** NEW SLIDE ************** -->
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# Regular code
+
+```{}
+then_this(
+  and_then_one_more(
+    then_another(
+      do_one_thing(
+        frames
+      ) 
+    )
+  )
+)
+```
+
+]]]
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+
+# The piped version
+
+```{}
+frames %>% 
+  do_one_thing() %>%
+  then_another() %>%
+  and_then_one_more() %>%
+  then_this()
+```
+
+]]]
+]]
 
 <!-- DONE -->
 ---
