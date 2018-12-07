@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>R Bootcamp</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Danielle Navarro &amp; Amy Perfors" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet/leaflet.js"></script>
+    <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+    <script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+    <link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding/leaflet.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R Bootcamp
+## Complex Human Data Summer School
+### Danielle Navarro &amp; Amy Perfors
+### 9 Dececember 2018
+
+---
+
+
+&lt;!-- the xaringan package --&gt;
+&lt;!-- devtools::install_github("yihui/xaringan") --&gt;
+
+&lt;!-- the leaflet package is on CRAN --&gt;
+
+
+
+
+# Welcome!
+
+
+```r
+library(leaflet)
+leaflet() %&gt;% addTiles() %&gt;% setView(144.9612, -37.7963, zoom = 17)
+```
+
+<div id="htmlwidget-548bb35ed8a26356ca72" style="width:100%;height:396px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-548bb35ed8a26356ca72">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[-37.7963,144.9612],17,[]]},"evals":[],"jsHooks":[]}</script>
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# Getting Started
+http://compcogscisydney.org/psyr/getting-started.html
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+
+# Getting started
+
+- Installed R
+- Installed RStudio
+- Typed a command:
+
+
+```r
+345 * 67
+```
+
+```
+## [1] 23115
+```
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# Variables
+http://compcogscisydney.org/psyr/variables.html
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+# Variables
+
+- Variables are labels for information
+- Created by using `&lt;-` 
+- Can be numeric, text, and more
+
+--
+
+```r
+my_name &lt;- "Danielle"
+my_age &lt;- 41
+```
+
+--
+
+```r
+my_name
+```
+
+```
+## [1] "Danielle"
+```
+
+```r
+my_age
+```
+
+```
+## [1] 41
+```
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# Scripts, Packages
+http://compcogscisydney.org/psyr/scripts.html
+http://compcogscisydney.org/psyr/packages.html
+
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# The Workspace
+http://compcogscisydney.org/psyr/workspaces.html
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# Vectors
+http://compcogscisydney.org/psyr/vectors.html
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# Loops and Conditionals
+http://compcogscisydney.org/psyr/loops.html
+http://compcogscisydney.org/psyr/branches.html
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# Writing Functions
+http://compcogscisydney.org/psyr/functions.html
+
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# A Programming Exercise: &lt;br&gt;The Rescorla-Wagner Model
+http://compcogscisydney.org/psyr/programming.html
+
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# More R Data Types
+http://compcogscisydney.org/psyr/data-types.html
+
+
+
+
+
+
+
+&lt;!-- ************************************************ --&gt;
+---
+class: inverse, middle, center
+
+# blah blah blah
+
+
+&lt;!-- this is all stuff from the Xaringan template --&gt;
+---
+
+# Some Tips
+
+An example of using the trailing comment `#&lt;&lt;` to highlight lines:
+
+````markdown
+```{r tidy=FALSE}
+library(ggplot2)
+ggplot(mtcars) + 
+  aes(mpg, disp) + 
+  geom_point() +   #&lt;&lt;
+  geom_smooth()    #&lt;&lt;
+```
+````
+
+Output:
+
+
+```r
+library(ggplot2)
+ggplot(mtcars) + 
+  aes(mpg, disp) + 
+* geom_point() +
+* geom_smooth()
+```
+
+---
+
+# Some Tips
+
+When you enable line-highlighting, you can also use the chunk option `highlight.output` to highlight specific lines of the text output from a code chunk. For example, `highlight.output = TRUE` means highlighting all lines, and `highlight.output = c(1, 3)` means highlighting the first and third line.
+
+````md
+```{r, highlight.output=c(1, 3)}
+head(iris)
+```
+````
+
+
+```
+*##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+*## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa
+```
+
+Question: what does `highlight.output = c(TRUE, FALSE)` mean? (Hint: think about R's recycling of vectors)
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

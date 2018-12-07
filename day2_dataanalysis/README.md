@@ -16,3 +16,11 @@ Within each content section, I've linked to a written tutorial, the HTML version
 - Data visualisation in tidyverse ([tutorial](ggplot-notes.md), [slides](ggplot-slides.html))
 - Statistical modelling in R ([tutorial](stats-notes.md), [slides](stats-slides.html))
 
+R packages used today:
+
+- tidyverse
+- skimr
+- here
+- lme4
+- lsr
+

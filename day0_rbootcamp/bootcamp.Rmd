@@ -1,0 +1,209 @@
+---
+title: "R Bootcamp"
+subtitle: "Complex Human Data Summer School"
+author: "Danielle Navarro & Amy Perfors"
+date: "9 Dececember 2018"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+<!-- the xaringan package -->
+<!-- devtools::install_github("yihui/xaringan") -->
+
+<!-- the leaflet package is on CRAN -->
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+# Welcome!
+
+```{r out.width='100%', fig.height=5.5, eval=require('leaflet')}
+library(leaflet)
+leaflet() %>% addTiles() %>% setView(144.9612, -37.7963, zoom = 17)
+```
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# Getting Started
+http://compcogscisydney.org/psyr/getting-started.html
+
+
+
+<!-- ************************************************ -->
+---
+
+# Getting started
+
+- Installed R
+- Installed RStudio
+- Typed a command:
+
+```{r}
+345 * 67
+```
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# Variables
+http://compcogscisydney.org/psyr/variables.html
+
+
+
+<!-- ************************************************ -->
+---
+# Variables
+
+- Variables are labels for information
+- Created by using `<-` 
+- Can be numeric, text, and more
+
+--
+```{r}
+my_name <- "Danielle"
+my_age <- 41
+```
+
+--
+```{r}
+my_name
+my_age
+```
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# Scripts, Packages
+http://compcogscisydney.org/psyr/scripts.html
+http://compcogscisydney.org/psyr/packages.html
+
+
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# The Workspace
+http://compcogscisydney.org/psyr/workspaces.html
+
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# Vectors
+http://compcogscisydney.org/psyr/vectors.html
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# Loops and Conditionals
+http://compcogscisydney.org/psyr/loops.html
+http://compcogscisydney.org/psyr/branches.html
+
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# Writing Functions
+http://compcogscisydney.org/psyr/functions.html
+
+
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# A Programming Exercise: <br>The Rescorla-Wagner Model
+http://compcogscisydney.org/psyr/programming.html
+
+
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# More R Data Types
+http://compcogscisydney.org/psyr/data-types.html
+
+
+
+
+
+
+
+<!-- ************************************************ -->
+---
+class: inverse, middle, center
+
+# blah blah blah
+
+
+<!-- this is all stuff from the Xaringan template -->
+---
+
+# Some Tips
+
+An example of using the trailing comment `#<<` to highlight lines:
+
+````markdown
+`r ''````{r tidy=FALSE}
+library(ggplot2)
+ggplot(mtcars) + 
+  aes(mpg, disp) + 
+  geom_point() +   #<<
+  geom_smooth()    #<<
+```
+````
+
+Output:
+
+```{r tidy=FALSE, eval=FALSE}
+library(ggplot2)
+ggplot(mtcars) + 
+  aes(mpg, disp) + 
+  geom_point() +   #<<
+  geom_smooth()    #<<
+```
+
+---
+
+# Some Tips
+
+When you enable line-highlighting, you can also use the chunk option `highlight.output` to highlight specific lines of the text output from a code chunk. For example, `highlight.output = TRUE` means highlighting all lines, and `highlight.output = c(1, 3)` means highlighting the first and third line.
+
+````md
+`r ''````{r, highlight.output=c(1, 3)}
+head(iris)
+```
+````
+
+```{r, highlight.output=c(1, 3), echo=FALSE}
+head(iris)
+```
+
+Question: what does `highlight.output = c(TRUE, FALSE)` mean? (Hint: think about R's recycling of vectors)
+
