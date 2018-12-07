@@ -536,12 +536,13 @@ class: split-two bg-main1
 .pull.left[.font2[
 - Assuming you're editing *different* things
 - Make local commits whenever you like
-- Do `git pull` before `git push` 
-- But what if you get a *merge conflict*????
+- Remember to pull before you push!
 ]]
 ]]
 --
 .column.bg-main3[.content.vmiddle.center[
+
+# But beware... of merge conflicts 
 
 <img src="https://media.giphy.com/media/10Iu43S5QuBTMc/giphy.gif" width = "90%">
 
