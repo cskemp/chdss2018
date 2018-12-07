@@ -786,6 +786,589 @@ frames %&gt;%
 ]]]
 ]]
 
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[group_by, summarise, ungroup]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+frames %&gt;%
+  group_by(test_item, sample_size, n_obs, condition) %&gt;%
+  summarise(response = mean(response))
+```
+
+]]]
+]]
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+frames %&gt;%
+  group_by(test_item, sample_size, n_obs, condition) %&gt;%
+  summarise(response = mean(response))
+```
+
+```
+## # A tibble: 42 x 5
+## # Groups:   test_item, sample_size, n_obs [?]
+##    test_item sample_size n_obs condition response
+##        &lt;int&gt; &lt;chr&gt;       &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1         1 large          12 category      7.60
+##  2         1 large          12 property      7.16
+##  3         1 medium          6 category      7.32
+##  4         1 medium          6 property      6.66
+##  5         1 small           2 category      6.07
+##  6         1 small           2 property      5.78
+##  7         2 large          12 category      7.51
+##  8         2 large          12 property      7.20
+##  9         2 medium          6 category      7.17
+## 10         2 medium          6 property      6.95
+## # ... with 32 more rows
+```
+
+]]]
+]]
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+frames %&gt;%
+  group_by(test_item, sample_size, n_obs, condition) %&gt;%
+  summarise(response = mean(response)) %&gt;%
+  ungroup()
+```
+
+```
+## # A tibble: 42 x 5
+##    test_item sample_size n_obs condition response
+##        &lt;int&gt; &lt;chr&gt;       &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1         1 large          12 category      7.60
+##  2         1 large          12 property      7.16
+##  3         1 medium          6 category      7.32
+##  4         1 medium          6 property      6.66
+##  5         1 small           2 category      6.07
+##  6         1 small           2 property      5.78
+##  7         2 large          12 category      7.51
+##  8         2 large          12 property      7.20
+##  9         2 medium          6 category      7.17
+## 10         2 medium          6 property      6.95
+## # ... with 32 more rows
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+frames %&gt;% 
+  group_by(test_item) %&gt;%
+  summarise(
+    mean_resp = mean(response),
+    sd_resp = sd(response),
+    count = n()
+  ) %&gt;%
+  ungroup()
+```
+
+```
+## # A tibble: 7 x 4
+##   test_item mean_resp sd_resp count
+##       &lt;int&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;
+## 1         1      6.77    2.56   675
+## 2         2      6.88    2.10   675
+## 3         3      5.71    2.41   675
+## 4         4      4.48    2.68   675
+## 5         5      3.76    2.81   675
+## 6         6      3.43    2.99   675
+## 7         7      3.26    3.11   675
+```
+
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[arrange, filter, select, mutate]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response &lt;- frames %&gt;%
+  group_by(test_item, sample_size, n_obs, condition) %&gt;%
+  summarise(response = mean(response)) %&gt;%
+  ungroup()
+
+average_response %&gt;%
+  filter(sample_size == "small")
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response %&gt;%
+  filter(sample_size == "small")
+```
+
+```
+## # A tibble: 14 x 5
+##    test_item sample_size n_obs condition response
+##        &lt;int&gt; &lt;chr&gt;       &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1         1 small           2 category      6.07
+##  2         1 small           2 property      5.78
+##  3         2 small           2 category      6.26
+##  4         2 small           2 property      6.21
+##  5         3 small           2 category      5.87
+##  6         3 small           2 property      5.24
+##  7         4 small           2 category      5.11
+##  8         4 small           2 property      4.68
+##  9         5 small           2 category      4.55
+## 10         5 small           2 property      3.99
+## 11         6 small           2 category      4.16
+## 12         6 small           2 property      3.68
+## 13         7 small           2 category      3.98
+## 14         7 small           2 property      3.67
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response %&gt;%
+  filter(sample_size == "small") %&gt;%
+  arrange(condition)
+```
+
+```
+## # A tibble: 14 x 5
+##    test_item sample_size n_obs condition response
+##        &lt;int&gt; &lt;chr&gt;       &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1         1 small           2 category      6.07
+##  2         2 small           2 category      6.26
+##  3         3 small           2 category      5.87
+##  4         4 small           2 category      5.11
+##  5         5 small           2 category      4.55
+##  6         6 small           2 category      4.16
+##  7         7 small           2 category      3.98
+##  8         1 small           2 property      5.78
+##  9         2 small           2 property      6.21
+## 10         3 small           2 property      5.24
+## 11         4 small           2 property      4.68
+## 12         5 small           2 property      3.99
+## 13         6 small           2 property      3.68
+## 14         7 small           2 property      3.67
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response %&gt;%
+  filter(sample_size == "small") %&gt;%
+  arrange(condition) %&gt;%
+  select(test_item, condition, response)
+```
+
+```
+## # A tibble: 14 x 3
+##    test_item condition response
+##        &lt;int&gt; &lt;chr&gt;        &lt;dbl&gt;
+##  1         1 category      6.07
+##  2         2 category      6.26
+##  3         3 category      5.87
+##  4         4 category      5.11
+##  5         5 category      4.55
+##  6         6 category      4.16
+##  7         7 category      3.98
+##  8         1 property      5.78
+##  9         2 property      6.21
+## 10         3 property      5.24
+## 11         4 property      4.68
+## 12         5 property      3.99
+## 13         6 property      3.68
+## 14         7 property      3.67
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response_small &lt;- average_response %&gt;%
+  filter(sample_size == "small") %&gt;%
+  arrange(condition) %&gt;%
+  select(test_item, condition, response)
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response_small &lt;- average_response_small %&gt;%
+  mutate(generalisation = response/9)
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+average_response_small &lt;- average_response_small %&gt;%
+  mutate(generalisation = response/9) %&gt;%
+  select(-response)
+
+average_response_small
+```
+
+```
+## # A tibble: 14 x 3
+##    test_item condition generalisation
+##        &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;
+##  1         1 category           0.674
+##  2         2 category           0.696
+##  3         3 category           0.652
+##  4         4 category           0.568
+##  5         5 category           0.506
+##  6         6 category           0.462
+##  7         7 category           0.442
+##  8         1 property           0.643
+##  9         2 property           0.690
+## 10         3 property           0.583
+## 11         4 property           0.521
+## 12         5 property           0.443
+## 13         6 property           0.409
+## 14         7 property           0.407
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[gather and spread]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+wide_avrs &lt;- average_response_small %&gt;%
+  spread(key = condition, value = generalisation)
+```
+
+]]]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+wide_avrs &lt;- average_response_small %&gt;%
+  spread(key = condition, value = generalisation)
+
+wide_avrs
+```
+
+```
+## # A tibble: 7 x 3
+##   test_item category property
+##       &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1         1    0.674    0.643
+## 2         2    0.696    0.690
+## 3         3    0.652    0.583
+## 4         4    0.568    0.521
+## 5         5    0.506    0.443
+## 6         6    0.462    0.409
+## 7         7    0.442    0.407
+```
+
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+wide_avrs %&gt;% gather(
+  key = "condition", value = "generalisation", 
+  category, property)
+```
+
+```
+## # A tibble: 14 x 3
+##    test_item condition generalisation
+##        &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;
+##  1         1 category           0.674
+##  2         2 category           0.696
+##  3         3 category           0.652
+##  4         4 category           0.568
+##  5         5 category           0.506
+##  6         6 category           0.462
+##  7         7 category           0.442
+##  8         1 property           0.643
+##  9         2 property           0.690
+## 10         3 property           0.583
+## 11         4 property           0.521
+## 12         5 property           0.443
+## 13         6 property           0.409
+## 14         7 property           0.407
+```
+
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+frames %&gt;% 
+  group_by(test_item, sample_size, condition) %&gt;%
+  summarise(response = mean(response)) %&gt;%
+  unite(col = "cond_ss", condition, sample_size) 
+```
+
+```
+## # A tibble: 42 x 3
+## # Groups:   test_item [7]
+##    test_item cond_ss         response
+##        &lt;int&gt; &lt;chr&gt;              &lt;dbl&gt;
+##  1         1 category_large      7.60
+##  2         1 property_large      7.16
+##  3         1 category_medium     7.32
+##  4         1 property_medium     6.66
+##  5         1 category_small      6.07
+##  6         1 property_small      5.78
+##  7         2 category_large      7.51
+##  8         2 property_large      7.20
+##  9         2 category_medium     7.17
+## 10         2 property_medium     6.95
+## # ... with 32 more rows
+```
+
+]]]
+]]
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-30 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+]]
+
+.column.bg-main3[.content.vtop.center[
+.pull.left[.pad1[.font2[
+
+```r
+frames %&gt;% 
+  group_by(test_item, sample_size, condition) %&gt;%
+  summarise(response = mean(response)) %&gt;%
+  unite(col = "cond_ss", condition, sample_size) %&gt;%
+  spread(key = "cond_ss", value = response)
+```
+
+```
+## # A tibble: 7 x 7
+## # Groups:   test_item [7]
+##   test_item category_large category_medium category_small property_large
+##       &lt;int&gt;          &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt;          &lt;dbl&gt;
+## 1         1           7.60            7.32           6.07           7.16
+## 2         2           7.51            7.17           6.26           7.20
+## 3         3           6.39            5.98           5.87           5.23
+## 4         4           5.39            4.97           5.11           3.07
+## 5         5           4.72            4.22           4.55           2.26
+## 6         6           4.43            3.85           4.16           1.91
+## 7         7           4.18            3.61           3.98           1.90
+## # ... with 2 more variables: property_medium &lt;dbl&gt;, property_small &lt;dbl&gt;
+```
+
+]]]
+]]
+
+
+
 &lt;!-- DONE --&gt;
 ---
 
