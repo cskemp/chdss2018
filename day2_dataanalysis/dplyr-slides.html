@@ -247,426 +247,381 @@ install.packages("skimr")
 
 ]]
 
-
-
 &lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Configuring git]
-]]
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1
-
-.pad2[
-.font3[Configuring git]
-.pull.left[.font2[
-- Git (&amp; later, GitHub) needs to know your name and email
-- Choose wisely! GitHub has educational discounts
-- From the Windows command prompt / Mac terminal:
-]
-```{}
-git config --global user.name 'Danielle Navarro'
-git config --global user.email 'd.navarro@unsw.edu.au'
-```
-]]
---
-.pad2[.pull.left[.font2[
-- Other configurable things:
-]
-```{}
-git config --list
-```
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Get a GitHub account]
-]]
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-class: split-two bg-main1
+class: split-40 bg-main1
 
 .column.bg-main1[.content.vmiddle.center[
 
-# Get a GitHub account
-
-&lt;br&gt;
-
-.pull.left[.pad1[
-
-### https://github.com/
-### GitHub will host repositories for you
-### Allows proper version control 
-### Ideal for collaborative coding
-
-]]
-
-]]
-
-.column.bg-main3[.content.vmiddle.center[
-
-&lt;img src="images/github.png", width="70%"&gt;
-
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Creating a repository on GitHub]
-]]
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-class: split-two bg-main1
-
-.column.bg-main1[.content.vmiddle.center[
-
-# How to create a repo
-
-&lt;br&gt;
-
-.pull.left[.pad1[
-
-### Select new repository (The + in the top right)
-### Fill out details (See adjacent panel)
-### Celebrate! (See notes for extras)
-
-]]
-
-]]
-
-.column.bg-main3[.content.vmiddle.center[
-
-&lt;img src="images/new_repository3.jpg", width="70%"&gt;
-
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Clone to your local machine]
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-class: split-two bg-main1
-
-.row.bg-main1[.content.vmiddle.center[
-
-# At the Windows Command Prompt
-
-.pull.left[.pad2[
-```{}
-cd C:\Users\Dan\GitHub
-git clone https://github.com/djnavarro/summerschool.git
-```
-]]
-]]
-
---
-
-.row.bg-main3[.content.vmiddle.center[
-
-# At the Mac OS Terminal
-
-.pull.left[.pad2[
-```{}
-cd /Users/Dan/GitHub
-git clone https://github.com/djnavarro/summerschool.git
-```
-
-]]
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle
-
-# The result is a local copy of the repository 
-&lt;br&gt;
-&lt;img src="images/clonedrepo.jpg", width="70%"&gt;
-&lt;br&gt;
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Learning about your repository]
-]]
-
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-class: split-two bg-main1
-
-.column.bg-main1[.content.vmiddle.center[
-
-# How do you feel?
-
-.pull.left[.pad2[
-```{}
-git status
-```
-```{}
-On branch master
-Your branch is up to date with 'origin/master'.
-
-nothing to commit, working tree clean
-```
-]]
-]]
-
-
-.column.bg-main3[.content.vmiddle.center[
-
-
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-class: split-70 bg-main1
-
-.column.bg-main1[.content.vmiddle.center[
-
-# Where is your home?
-
-.pull.left[.pad2[
-```{}
-git remote --verbose
-```
-```{}
-origin  https://github.com/djnavarro/summerschool.git (fetch)
-origin  https://github.com/djnavarro/summerschool.git (push)
-```
-]]
-]]
-
-
-.column.bg-main3[.content.vmiddle.center[
-
-
-]]
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Making local changes]
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle
-
-# Let's suppose we want to edit the README.md file 
-
-&lt;br&gt;
-&lt;img src="images/readme_rstudio.jpg", width="50%"&gt;
-&lt;br&gt;
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle
-
-&lt;br&gt;
-&lt;img src="images/readme_rstudio2.jpg", width="90%"&gt;
-&lt;br&gt;
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Making a local commit]
-]]
-
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: split-two bg-main1
-
-.column.bg-main1[.content.vmiddle.center[
-
-.pull.left[.pad1[
-
-.font2[It's a "simple" three-step process...]
-.font2[
-- check the status
-- add (stage) the changes
-- commit the changes
-]
-```{}
-git status
-git add --all
-git commit -m "YOUR MESSAGE HERE"
-```
-.font2[... see tutorial for details]
-]]
-]]
-
-.column.bg-main3[.content.vmiddle.center[
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Pushing your commits to GitHub]
-]]
-
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: split-two bg-main1
-
-.column.bg-main1[.content.vmiddle.center[
-
-.pull.left[.pad1[
-
-.font2[Pushing to GitHub actually **is** easy!]
-
-```{}
-git push -u origin master
-```
-
-]]
-]]
-
---
-
-.column.bg-main3[.content.vmiddle.center[
-
-&lt;img src="images/updated_repository.jpg" width="90%"&gt;
-
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle hide-slide-number
-
-.reveal-text.bg-main2[.pad1[
-.font4[Adding collaborators]
-]]
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: bg-main1 center middle
-
-# To add a collaborator on GitHub
-
-&lt;br&gt;
-&lt;img src="images/addcontributor.jpg", width="90%"&gt;
-&lt;br&gt;
-
-
-&lt;!-- *********** NEW SLIDE ************** --&gt;
----
-
-class: split-two bg-main1
-
-.column.bg-main1[.content.vmiddle.center[
-
-# Collaborators can work on it too...
-
-.pull.left[.font2[
-- Try it: invite someone and have them
-- `clone` your repo
-- `commit` some changes 
-- `push` up to GitHub
-]]
-]]
---
-.column.bg-main3[.content.vmiddle.center[
-
-# How do you get their changes?
+# New R Markdown
 
 .pull.left[.pad1[.font2[
-```{}
-git pull
+- At the top is the YAML header
+- Leave the knitr thing alone
+- This is the whole document...
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+.pull.left[.pad1[.font2[
+
+````
+---
+title: "Exploring the data"
+author: "Danielle Navarro"
+date: "4 December 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 ```
+````
+
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Write...
+
+.pull.left[.pad1[.font2[
+- Load packages in the first chunk
+- Write descriptions for humans!
+- Document, document, document
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+.pull.left[.pad1[.font2[
+
+````
+## Getting started
+
+The first thing to do in our analysis is load the R
+packages that we'll use to do the work:
+
+```{r}
+library(here)
+library(tidyverse)
+library(skimr)
+```
+
+The next step is to load the data set itself. The data 
+from the sampling frames experiment are stored in the 
+"frames_ex2.csv" file:
+
+```{r}
+loc &lt;- here("analysis","data","frames_ex2.csv")
+frames &lt;- read_csv(file = loc)
+```
+````
+
+]]]
+]]
+
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# ... and knit!
+
+.pull.left[.pad1[.font2[
+- Note the output messages
+- Helpful the first time...
+- ... but eventually annoying
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/explore1.png" width = "90%"&gt;
+
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Tidy the code chunk
+
+.pull.left[.pad1[.font2[
+- Give it a name (like packageload)
+- Suppress messages if you want
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+
+.pull.left[.pad1[.font2[
+````
+## Getting started
+
+The first thing to do in our analysis is load the R
+packages that we'll use to do the work:
+
+```{r packageload, message=FALSE}
+library(here)
+library(tidyverse)
+library(skimr)
+```
+````
+]]]
+
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Tidy the code chunk
+
+.pull.left[.pad1[.font2[
+- Give it a name (like packageload)
+- Suppress messages if you want
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/explore2.png" width = "90%"&gt;
+
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Import the data
+
+.pull.left[.pad1[.font2[
+- Verbal description
+- Specify the file location
+- Import data with read_csv()
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+.pull.left[.pad1[.font2[
+
+````
+The next step is to load the data set itself. The data 
+from the sampling frames experiment are stored in the 
+"frames_ex2.csv" file:
+
+```{r dataimport}
+loc &lt;- here("analysis","data","frames_ex2.csv")
+frames &lt;- read_csv(file = loc)
+```
+````
+
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Import the data
+
+.pull.left[.pad1[.font2[
+- Verbal description
+- Specify the file location
+- Import data with read_csv()
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+
+&lt;img src="images/explore3.png" width = "90%"&gt;
+
+]]
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Inspect the data set
+
+.pull.left[.pad1[.font2[
+- The data is a tibble
+- Printing it shows the structure
+- The glimpse() function is nice
+- Name each code chunk!
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+.pull.left[.pad1[.font2[
+
+````
+The data set has been imported as a tibble. Let's take 
+a quick look at the data. Each row in the data set is
+a single response, and each column is a variable:
+
+```{r printframes}
+frames
+```
+
+An alternative way to view the a tibble that sometimes
+looks nicer is to use the `glimpse()` function:
+
+```{r glimpseframes}
+glimpse(frames)
+```
+````
+
+]]]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Inspect the data set
+
+.pull.left[.pad1[.font2[
+- The data is a tibble
+- Printing it shows the structure
+- The glimpse() function is nice
+- Name each code chunk!
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/explore4.png" width = "90%"&gt;
+
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Skim over the data
+
+.pull.left[.pad1[.font2[
+- Gives means, std dev.
+- Gives quantiles
+- Even has little text histograms
+- (Not always useful though!)
+]]]
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+.pull.left[.pad1[.font2[
+````
+Finally, as a quick first pass, we can use the `skim()`
+function to get a simple overview of each variable:
+
+```{r skimframes}
+skim(frames)
+```
+````
+
 ]]]
 ]]
 
 
 &lt;!-- *********** NEW SLIDE ************** --&gt;
 ---
-
-class: split-two bg-main1
+class: split-40 bg-main1
 
 .column.bg-main1[.content.vmiddle.center[
 
-# You can work simultaneously
+# Skim over the data
 
-.pull.left[.font2[
-- Assuming you're editing *different* things
-- Make local commits whenever you like
-- Remember to pull before you push!
+.pull.left[.pad1[.font2[
+- Gives means, std dev.
+- Gives quantiles
+- Even has little text histograms
+- (Not always useful though!)
+]]]
+
 ]]
-]]
---
+
 .column.bg-main3[.content.vmiddle.center[
 
-# But beware... of merge conflicts 
+&lt;img src="images/explore5.png" width = "90%"&gt;
 
-&lt;img src="https://media.giphy.com/media/10Iu43S5QuBTMc/giphy.gif" width = "90%"&gt;
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-40 bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Skim over the data
+
+.pull.left[.pad1[.font2[
+- Gives means, std dev.
+- Gives quantiles
+- Even has little text histograms
+- (Not always useful though!)
+]]]
+
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/explore5.png" width = "90%"&gt;
 
 ]]
 
