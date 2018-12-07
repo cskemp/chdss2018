@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Projects &amp; R Markdown</title>
+    <meta charset="utf-8">
+    <meta name="author" content="  Danielle Navarro  <span>&lt;i class="fab  fa-twitter faa-float animated "&gt;&lt;/i&gt;@djnavarro</span>" />
+    <link href="libs/remark-css/kunoichi.css" rel="stylesheet" />
+    <link href="libs/remark-css/ninjutsu.css" rel="stylesheet" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="assets/ninpo.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Projects &amp; R Markdown
+## You’ll thank yourself later
+### <br><br>Danielle Navarro  <span>&lt;i class="fab  fa-twitter faa-float animated "&gt;&lt;/i&gt;@djnavarro</span>
+### <br><br>2018-12-11, Updated: 2018-12-07
+
+---
+
+
+
+
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[RStudio projects]
+]]
+
+
+
+---
+
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# Introduction
+
+&lt;br&gt;
+
+.pull.left[.pad1[
+
+### .orange[**What?**] Tool for R to track your project
+### .orange[**Why?**] Because file paths are a nightmare
+### .orange[**How?**] I'm so glad you asked...
+
+]]
+
+]]
+
+--
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/rprojlogo.png", width="70%"&gt;
+
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+# How to create
+
+.pull.left[.pad1[.font2[
+
+- RStudio projects menu (top right)
+- New Project &gt; Existing Directory
+- Create in the same folder as the git repo
+- Drop down list of projects in the menu
+
+]]]
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/new_rstudio_project3.jpg", width="100%"&gt;
+
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle
+
+# Behold our creation!
+&lt;br&gt;
+&lt;img src="images/new_rstudio_project4.jpg", width="100%"&gt;
+&lt;br&gt;
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[Taking the pain out of file paths]
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle
+
+# Only you can prevent laptop fires
+&lt;br&gt;
+&lt;img src="images/jennybryan.png", width="60%"&gt;
+
+[@JennyBryan](https://twitter.com/JennyBryan)
+&lt;br&gt;
+
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1
+
+.pad2[
+.pull.left[.font2[
+- The "here" package is better than a laptop fire
+- Detects the RStudio project file (or a .here file)
+- Tells you where the project root is:
+]
+
+```r
+library(here)
+```
+
+```
+## here() starts at /Users/dan/GitHub/chdss2018/day2_dataanalysis
+```
+]]
+--
+.pad2[.pull.left[.font2[
+- Use the here function to specify paths:
+]
+
+```r
+here("analysis","data","mydatafile.csv")
+```
+
+```
+## [1] "/Users/dan/GitHub/chdss2018/day2_dataanalysis/analysis/data/mydatafile.csv"
+```
+]]
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle hide-slide-number
+
+.reveal-text.bg-main2[.pad1[
+.font4[R Markdown]
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: split-two bg-main1
+
+.column.bg-main1[.content.vmiddle.center[
+
+.pull.left[.pad1[
+
+.font2[
+- File &gt; New File &gt; R Markdown
+- Enter information in dialog box (right)
+- Save the file
+- Click "Knit"
+]
+]]
+]]
+
+.column.bg-main3[.content.vmiddle.center[
+
+&lt;img src="images/new_rmarkdown2.jpg", width="90%"&gt;
+]]
+
+
+
+&lt;!-- *********** NEW SLIDE ************** --&gt;
+---
+
+class: bg-main1 center middle
+
+# The result is a pretty HTML file
+&lt;br&gt;
+&lt;img src="images/knittedmarkdown.png", width="80%"&gt;
+&lt;br&gt;
+
+
+&lt;!-- DONE --&gt;
+---
+
+class: bg-main1 middle center
+
+## thank u, next
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
