@@ -154,7 +154,7 @@ class: split-two bg-main1
 
 .column.bg-main3[.content.vmiddle.center[
 
-<img src="images/horst_tidyr.png", width="70%">
+<img src="images/horst_here.png", width="70%">
 
 [@allison_horst](https://twitter.com/allison_horst)
 
