@@ -2,10 +2,11 @@
 
 library(ggplot2)
 library(tidyverse)
+library(here)
 
 h  <- c('cold', 'emphysema', 'stomach upset')
 p_h <- c(0.46, 0.04, 0.4)
-p_d_given_h <- c(0.5, 0.5, 0.05)
+p_d_given_h <- c(0.4, 0.4, 0.05)
 
 # update prior by multiplying by likelihood
 p_h_given_d <- p_d_given_h * p_h
@@ -15,15 +16,14 @@ p_h_given_d <- p_h_given_d / sum(p_h_given_d)
 
 
 # plot prior, likelihood and posterior
-
-prior <- tibble(h, val=p_h, dist='prior')
-like  <- tibble(h, val=p_d_given_h, dist='like')
-post  <- tibble(h, val=p_h_given_d, dist='post')
+prior <- tibble(h, val=p_h, dist='prior P(h)')
+like  <- tibble(h, val=p_d_given_h, dist='like P(D|h)')
+post  <- tibble(h, val=p_h_given_d, dist='post P(h|D)')
 
 alld = rbind(prior, like, post)
 
 alld <- alld %>%
-    mutate(dist = factor(dist, levels=c("prior", "like", "post"))
+    mutate(dist = factor(dist, levels=c("prior P(h)", "like P(D|h)", "post P(h|D)"))
 )
 
 pic <- alld %>%
@@ -34,3 +34,6 @@ pic <- alld %>%
   xlab("hypothesis")
 
 plot(pic)
+
+ggsave(here("output","coughingfriend.pdf"), plot = pic, width=4, height=4)
+
