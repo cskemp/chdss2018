@@ -1,12 +1,12 @@
 ---
 title: "Projects & R Markdown"
 subtitle: "You'll thank yourself later"
-author: "<br><br>Danielle Navarro &nbsp;`r anicon::faa('twitter', animate='float', rtext='@djnavarro')`"
-date: "<br><br>2018-12-11, Updated: `r Sys.Date()`"
+author: "<br><br>Danielle Navarro &nbsp;&nbsp;&nbsp;`r anicon::faa('twitter', animate='float', rtext=' @djnavarro')`"
+date: "11 December 2018"
 output:
   xaringan::moon_reader:
     lib_dir: libs
-    css: ["kunoichi", "ninjutsu" , "assets/ninpo.css"]
+    css: ["kunoichi", "ninjutsu" , "assets/ninpo.css", "assets/danielle.css"]
     self_contained: false
     nature:
       ratio: "16:9"

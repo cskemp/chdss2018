@@ -30,7 +30,7 @@
     --color-opacity70: rgba(86,36,87,0.7);
     --color-opacity50: rgba(86,36,87,0.5);
     --color-opacity30: rgba(86,36,87,0.3);
-    --logo: url("../images/R-LadiesGlobal-transparent.png");
+    --logo: url(""); /*--logo: url("../images/R-LadiesGlobal-transparent.png");*/
     --title-background: url("../bkgs/bg1.jpg");
 }
 
