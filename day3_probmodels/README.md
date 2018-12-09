@@ -5,25 +5,24 @@ Assumed knowledge:
 - Basic R programming from Day 0 
 - Some familiarity with the Hayes, Banner, Forrester and Navarro work on Sampling Frames and Inductive Inference 
 
-## Bayesian concept learning
+## Module 1: Introduction to Bayesian Inference
 
-- Introduction to Bayesian inference
-- Concept learning and the number game
+Coughing friend example
 
+## Module 2: Bayesian concept learning
 
-## Bayesian networks (aka Directed Graphical models)
+The number game
 
-- Introduction to Bayesian networks
-- Inference using JAGS
+## Module 3: Bayesian networks
 
+The food web problem
 
-## Standard probability distributions
+## Module 4: Inference using JAGS
 
-- Gaussian distribution
-- Bayesian cue combination
+Illustrated using the food web problem
 
+## Module 5: Hayes et al on sampling frames
 
-## Bayesian generalization
-
-- Hayes et al on category and property sampling
+- Multivariate Gaussian distributions
+- Hayes et al model.
 

@@ -1,5 +1,8 @@
 library('rjags')
 library('tidybayes')
+
+# specify observations here
+obs <- list(kelp = 1, mako = 2)
  
 speciesnames <- c("kelp", "herring", "dolphin", "tuna", "sandshark", "mako", "human")
 
@@ -9,7 +12,6 @@ t <- 0.5 # transmission rate
 # set up noisy-OR CPDs
 
 zerop <- c(1-b,b)
-#onep  <- structure(.Data = c(1-b,b,(1-t)*(1-b),1 - (1-t)*(1-b)), .Dim = c(2,2))
 onep  <- structure(.Data = c(1-b,(1-t)*(1-b),b,1 - (1-t)*(1-b)), .Dim = c(2,2))
 twop  <- structure(.Data = c( 1-b, 
                              (1-t)*(1-b), 
@@ -20,10 +22,6 @@ twop  <- structure(.Data = c( 1-b,
                               1-(1-t)*(1-b), 
                               1-(1-t)*(1-t)*(1-b)),  .Dim = c(2,2,2))
 
-# specify observations here
-obs <- list(kelp=1, mako=2)
-obs <- list(mako=2)
-
 foodwebdata<- c(obs, list(
       p.kelp = zerop,
       p.herring = onep,
@@ -33,15 +31,17 @@ foodwebdata<- c(obs, list(
       p.mako = twop, 
       p.human = onep))
 
-jags <- jags.model('foodweb.bug',data = foodwebdata,
+# set up the model in JAGS
+jags <- jags.model('foodweb.bug', data = foodwebdata,
                    n.chains = 4,
                    n.adapt = 100)
 
+# actually run the model in JAGS (ie sample from the posterior P(h|obs) )
 samples <- coda.samples(jags,
              c('kelp', 'herring', 'dolphin', 'tuna', 'sandshark', 'mako', 'human'),
              10000)
 
-# for each species extract the proportion of samples for which it is TRUE
+# for each species extract the proportion of samples for which it is TRUE. For today's session don't worry about the details of this function.
 
 genplot <- samples %>% 
         gather_draws(kelp, herring, dolphin, tuna, sandshark, mako, human) %>%
@@ -61,4 +61,6 @@ pic <- genplot %>%
       ylab("prob of having disease") 
 
 plot(pic)
+ggsave(here("output","foodweb_jags.pdf"), plot = pic, width=5, height=2)
+
 

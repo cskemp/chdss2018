@@ -1,6 +1,7 @@
 
 model
     {
+       # dcat specifies a discrete categorical distribution
        kelp ~ dcat(p.kelp[1:2])
        herring ~ dcat(p.herring[kelp,1:2])
        dolphin ~ dcat(p.dolphin[herring,1:2])
