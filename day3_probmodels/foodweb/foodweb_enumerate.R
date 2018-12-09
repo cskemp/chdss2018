@@ -1,5 +1,8 @@
+# Code for foodweb problem
+
 library(tidyverse)
 
+# First set up the structure of the Bayes net along with functions for computing the prior and likelihood
 
 speciesnames <- c("kelp", "herring", "dolphin", "tuna", "sandshark", "mako", "human")
 
@@ -26,33 +29,35 @@ cpds <- list( kelp=zerop,
               mako=twop,
               human=onep )
 
-# compute the probability of V, which specifies a value for each species in the foodweb 
+# function that computes the probability of hypothesis H, which specifies a value for each species in the foodweb 
 
-p_v <- function(v) {
-  prob = cpds$kelp[v$kelp] *
-    cpds$herring[v$kelp,v$herring] *
-    cpds$dolphin[v$herring,v$dolphin] *
-    cpds$tuna[v$herring,v$tuna] *
-    cpds$sandshark[v$herring,v$sandshark] *
-    cpds$mako[v$dolphin,v$tuna,v$mako] *
-    cpds$human[v$mako,v$human] 
+p_h <- function(h) {
+  prob = cpds$kelp[h$kelp] *
+    cpds$herring[h$kelp,h$herring] *
+    cpds$dolphin[h$herring,h$dolphin] *
+    cpds$tuna[h$herring,h$tuna] *
+    cpds$sandshark[h$herring,h$sandshark] *
+    cpds$mako[h$dolphin,h$tuna,h$mako] *
+    cpds$human[h$mako,h$human] 
 
   return(prob)
 }
 
 # Compute likelihood assuming weak sampling
-p_obs_given_v <- function(obs, v) {
+p_obs_given_h <- function(obs, h) {
   likelihood <- 1
   for (l in labels(obs)) {
-    if (obs[l] != v[l]) {
+    if (obs[l] != h[l]) {
       likelihood <-  0
     }
   }
   return(likelihood)
 }
 
-# create full hypothesis space. Unlike the number game code, here we use 1 and 2 to indicate FALSE and TRUE respectively
+#--------------------------------------------------------------------------------
+# 1. Inference by enumerating the entire hypothesis space.
 
+# create full hypothesis space. Unlike the number game code, here we use 1 and 2 to indicate FALSE and TRUE respectively
 n <-  length(speciesnames)
 hs <-  expand.grid(replicate(n, 1:2, simplify = FALSE))
 colnames(hs) <- speciesnames
@@ -62,16 +67,16 @@ nH <- nrow(hs)
 # specify observations here
 
 obs <- list(kelp=1, mako=2)
-obs <- list(kelp=1)
 
 hs$prior = NA
 hs$likelihood = NA
 
-for (i in 1:nH) {
-  hs$prior[i] <- p_v(hs[i,])
-  hs$likelihood[i] <- p_obs_given_v(obs, hs[i,])
-}
+# set up prior and likelihood
 
+for (i in 1:nH) {
+  hs$prior[i] <- p_h(hs[i,])
+  hs$likelihood[i] <- p_obs_given_h(obs, hs[i,])
+}
 
 # compute posterior
 
@@ -79,7 +84,7 @@ hs$posterior <- hs$prior* hs$likelihood
 # "normalise" the posterior so that it sums to 1
 hs$posterior <- hs$posterior / sum( hs$posterior ) 
 
-# compute generalization for each animal in foodweb
+# compute posterior predictive distribution: ie generalization for each animal in foodweb
 
 gen <- hs[1,]
 for( animalname  in speciesnames ) {
@@ -110,19 +115,20 @@ makeplot(gen[1:n])
 #-------------------------------------------------------------------------------
 # 2. Inference by naive sampling
 
+# Sample a hypothesis from the prior
 
-sample_v <- function() {
+sample_h <- function() {
   tfvals <- c(1,2)
-  v <- list()
-  v$kelp <- sample(tfvals, 1, prob=cpds$kelp)   
-  v$herring <- sample(tfvals, 1, prob=cpds$herring[v$kelp,])   
-  v$dolphin <- sample(tfvals, 1, prob=cpds$dolphin[v$herring,])   
-  v$tuna <- sample(tfvals, 1, prob=cpds$tuna[v$herring,])   
-  v$sandshark <- sample(tfvals, 1, prob=cpds$sandshark[v$herring,])   
-  v$mako <- sample(tfvals, 1, prob=cpds$mako[v$dolphin,v$tuna,])   
-  v$human <- sample(tfvals, 1, prob=cpds$human[v$mako,])   
+  h <- list()
+  h$kelp <- sample(tfvals, 1, prob=cpds$kelp)   
+  h$herring <- sample(tfvals, 1, prob=cpds$herring[h$kelp,])   
+  h$dolphin <- sample(tfvals, 1, prob=cpds$dolphin[h$herring,])   
+  h$tuna <- sample(tfvals, 1, prob=cpds$tuna[h$herring,])   
+  h$sandshark <- sample(tfvals, 1, prob=cpds$sandshark[h$herring,])   
+  h$mako <- sample(tfvals, 1, prob=cpds$mako[h$dolphin,h$tuna,])   
+  h$human <- sample(tfvals, 1, prob=cpds$human[h$mako,])   
 
-  return(v)
+  return(h)
 }
 
 
@@ -138,7 +144,7 @@ samples$consistent <- NA
 
 # compute whether each sample is consistent with the observations
 for (i in 1:nsample) {
-  samples$consistent[i] <- p_obs_given_v(obs, samples[i,])
+  samples$consistent[i] <- p_obs_given_h(obs, samples[i,])
 }
 
 consistentHypotheses <- as.logical(samples$consistent)
