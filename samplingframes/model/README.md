@@ -1,6 +1,6 @@
 ## Modelling scripts
 
-Code and (somewhat preprocessed) data for the Gaussian process model for inductive reasoning described in:
+Code for the Gaussian process model for inductive reasoning described in:
 
 Hayes, Banner, Forrester & Navarro (in preparation). *Sampling frames and inductive inference.* Manuscript in preparation
 
