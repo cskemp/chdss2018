@@ -16,7 +16,7 @@ model {
 
   # pass f through logit function to get a function on [0,1]
   for(i in 1:ncat) {
-    phi[i] <- 1/(1+exp(-f[i]))
+    category_means[i] <- 1/(1+exp(-f[i]))
   }
 
   # to compute the probability that something will be a small bird
@@ -26,9 +26,9 @@ model {
 
   # ... then apply Bayes rule to compute the probability of observing
   # the relevant category under property sampling:
-  denom <- sum(phi * base)
+  denom <- sum(category_means * base)
   for(i in 1:ncat) {
-    pcat[i] <- (phi[i] * base[i]) / denom
+    pcat[i] <- (category_means[i] * base[i]) / denom
   }
 
   # sample the positive evidence

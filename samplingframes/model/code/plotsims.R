@@ -13,7 +13,6 @@ get_out <- function(mod, cond, samp) {
   names(out)[2] <- "prediction" 
   out$sample_size<- samp
   out$condition <- cond
-  browser()
   return(out)
 }
 
@@ -27,7 +26,9 @@ output <- rbind(
 )
 
 output<- output%>%
-  mutate(sample_size = factor(sample_size, levels = c("small","medium","large")))
+  mutate(sample_size = factor(sample_size, levels = c("small","medium","large"))) %>%
+  # plot results only for the first seven categories along the size dimension
+  filter(test <= 7)
 
 
 pic2 <- output  %>%

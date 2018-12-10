@@ -16,12 +16,13 @@ model {
 
   # pass f through logit function to get a function on [0,1]
   for(i in 1:ncat) {
-    phi[i] <- 1/(1+exp(-f[i]))
+    category_means[i] <- 1/(1+exp(-f[i]))
   }
 
   # category sampling: the N observations are all sampled with the
   # constraint that they come from the target category (i.e. test[1])
   for(i in 1:nobs) {
-    plaxium[i] ~ dbern(phi[category[i]])
+                 # dbern() essentially flips a weighted coin
+    plaxium[i] ~ dbern(category_means[category[i]])
   }
 }

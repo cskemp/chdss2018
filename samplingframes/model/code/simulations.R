@@ -6,8 +6,9 @@ make <- function(bugfile, obs = list()) {
   # parameters
   settings <- function(obs) {
     
-    # by default there are 7 categories
-    if(!exists("ncat",obs)) obs$ncat <- 7
+    # by default there are 10 categories, although the experiment only
+    # asks about 7
+    if(!exists("ncat",obs)) obs$ncat <- 10
     
     # add locations for the categories
     obs$test <- 1:obs$ncat
@@ -63,7 +64,7 @@ make <- function(bugfile, obs = list()) {
   # draw samples
   model$samples <- jags.samples(
     model = model$jagsmod, 
-    variable.names = c("phi"), 
+    variable.names = c("category_means"), 
     n.iter = model$opt$its,
     thin = model$opt$thin
   )
@@ -71,7 +72,7 @@ make <- function(bugfile, obs = list()) {
   # add a convenient summary
   model$out <- data.frame(
     test = model$obs$test,
-    phi = apply(model$samples$phi, 1, mean)
+    category_means  = apply(model$samples$category_means, 1, mean)
   )
   
   return(model)
@@ -83,32 +84,32 @@ sim <- list()
 # --- simulations for experiment 2 ---
 
 sim$category_n2 <- make(
-  bugfile = here("source","category.bug"),
+  bugfile = here("code","category.bug"),
   obs = list(nobs = 2, category = c(1,2))
 )
 
 sim$category_n6 <- make(
-  bugfile = here("source","category.bug"),
+  bugfile = here("code","category.bug"),
   obs = list(nobs = 6, category = rep.int(c(1,2),3))
 )
 
 sim$category_n12 <- make(
-  bugfile = here("source","category.bug"),
+  bugfile = here("code","category.bug"),
   obs = list(nobs = 12, category = rep.int(c(1,2),6))
 )
 
 sim$property_n2 <- make(
-  bugfile = here("source","property.bug"),
+  bugfile = here("code","property.bug"),
   obs = list(nobs = 2, category = c(1,2))
 )
 
 sim$property_n6 <- make(
-  bugfile = here("source","property.bug"),
+  bugfile = here("code","property.bug"),
   obs = list(nobs = 6, category = rep.int(c(1,2),3))
 )
 
 sim$property_n12 <- make(
-  bugfile = here("source","property.bug"),
+  bugfile = here("code","property.bug"),
   obs = list(nobs = 12, category = rep.int(c(1,2),6))
 )
 
