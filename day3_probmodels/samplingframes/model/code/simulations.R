@@ -1,6 +1,9 @@
 library(here)
 require(rjags)
 
+# Script for running the sampling frames model using JAGS
+# The code will give you some warnings about unused variables when you run it -- don't worry about them
+
 make <- function(bugfile, obs = list()) {
   
   # parameters

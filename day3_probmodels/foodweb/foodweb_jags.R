@@ -1,5 +1,6 @@
 library('rjags')
 library('tidybayes')
+library('tidyverse')
 
 # specify observations here
 obs <- list(kelp = 1, mako = 2)

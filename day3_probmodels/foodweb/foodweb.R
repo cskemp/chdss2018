@@ -12,9 +12,8 @@ inferencemethod <- "enumerate"
 # specify observations here.  Unlike the number game code, here we use 1 and 2
 # to indicate FALSE and TRUE respectively
 
-# Specify that kelp does not have the disease, but mako does
+# Specify that kelp does not have the disease, but makos do
 obs <- list(kelp = 1, mako = 2)
-obs <- list()
 
 #-------------------------------------------------------------------------------
 # Set up the structure of the Bayes net along with functions for computing the prior and likelihood
