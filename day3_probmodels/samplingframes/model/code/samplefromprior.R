@@ -1,5 +1,6 @@
 library(here)
 library(MASS)
+library(tidyverse)
 
 # consider 7 spheres of different sizes
 ncat <- 7
