@@ -4,14 +4,9 @@ Code for the Gaussian process model for inductive reasoning described in:
 
 Hayes, Banner, Forrester & Navarro (in preparation). *Sampling frames and inductive inference.* Manuscript in preparation
 
-In the `source` directory there are several scripts:
+Code directory has scripts for running the model
 
-- `category.bug` and `property.bug` are the JAGS model files that implement the Gaussian process model with censored sampling
-- `simulations.R` runs the JAGS simulations for the experiment and saves the results to the `output` directory
-- `plotsims.R` reads the results of the simulations and plots model predictions  
-
-
-In the `output` directory there are three files & three directories:
+In the `output` directory there are two files
 
 - `simulations.Rdata` contains the output from simulating the GP model. It contains the `make` function used to construct each simulation, and `sim`, a list that includes each separate condition (14 in total) as an element. See below for a summary of what each of these elements contains
 - `fits_lines.pdf` is the plot showing model predictions 

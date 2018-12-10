@@ -7,7 +7,6 @@ ncat <- 7
 # suppose that the 7 spheres are equally spaced along the size dimension
 test <- 1:ncat
 
-
 # parameter specifying mean of the Gaussian process 
 m <- 0
     
@@ -40,7 +39,10 @@ logit <- function(x) {
  return(1/(1+exp(-x)))
 }
 
+# apply the logit transformation to the samples
 category_means <- apply(samples, 1:2, logit)
+
+# plot the samples
 
 category_means <- as.tibble(category_means) %>%
     set_names(c("1", "2", "3", "4", "5", "6", "7"))
