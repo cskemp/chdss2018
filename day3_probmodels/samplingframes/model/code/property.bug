@@ -14,7 +14,7 @@ model {
   cov_gp_inv <- inverse(cov_gp)
   f ~ dmnorm(mean_gp, cov_gp_inv)
 
-  # pass f through logit function to get a function on [0,1]
+  # pass f through logistic function to get a function on [0,1]
   for(i in 1:ncat) {
     category_means[i] <- 1/(1+exp(-f[i]))
   }

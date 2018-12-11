@@ -35,13 +35,13 @@ for(i in 1:ncat) {
 nsample <- 6
 samples <-  mvrnorm(n=nsample,mean_gp, cov_gp)
 
-# define logit transformation which maps real numbers to probabilities
-logit <- function(x) {
+# define logistic transformation which maps real numbers to probabilities
+logistic <- function(x) {
  return(1/(1+exp(-x)))
 }
 
-# apply the logit transformation to the samples
-category_means <- apply(samples, 1:2, logit)
+# apply the logistic transformation to the samples
+category_means <- apply(samples, 1:2, logistic)
 
 # plot the samples
 
